@@ -80,6 +80,7 @@ class SaveMe():
 
 cherrypy.config.update({
     "server.socket_port": 8080,
+    "server.socket_host": "0.0.0.0"
 })
 
 if len(sys.argv) > 1 and sys.argv[1] == "production":
