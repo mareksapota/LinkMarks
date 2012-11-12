@@ -1,0 +1,21 @@
+#encoding UTF-8
+#extends base
+
+#def title
+Search results
+#end def
+
+#def content
+<a id="search-back" href="/">Back</a>
+<h1>Search results</h1>
+<ul id="bookmarks">
+  #for $bookmark in $bookmarks
+    <li class="bookmark">
+      <a class="edit" href="/edit?id=$bookmark.id&back=$query">Edit</a>
+      <span class="name">$bookmark.name</span>
+      <span class="url"><a href="$bookmark.url">$bookmark.url</a></span>
+      <span class="keyword">$bookmark.keyword</span>
+    </li>
+  #end for
+</ul>
+#end def

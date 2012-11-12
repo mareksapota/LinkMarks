@@ -1,0 +1,115 @@
+@mixin pretty-button {
+  $button-bg: green;
+  $button-fg: white;
+
+  padding: 0.5em;
+  border-radius: 0.5em;
+  border: 1px solid $button-bg;
+  background: -moz-linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
+  background: -webkit-linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
+  background: -o-linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
+  background: linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
+  text-decoration: none;
+  font-size: 0.8em;
+  color: $button-fg;
+  font-weight: bold;
+}
+
+@mixin border-box {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  width: 50em;
+  margin: 1em auto;
+}
+
+#search-back {
+  float: right;
+  @include pretty-button;
+}
+
+#search-form {
+  .query {
+    width: 100%;
+    @include border-box;
+  }
+
+  .new {
+    float: left;
+    @include pretty-button;
+  }
+
+  .submit {
+    float: right;
+    @include pretty-button;
+  }
+}
+
+#new-form, #edit-form {
+  label {
+    width: 10em;
+    display: inline-block;
+    float: left;
+  }
+
+  .entry {
+    width: 40em;
+    @include border-box;
+  }
+
+  .back {
+    float: left;
+    @include pretty-button;
+  }
+
+  .delete {
+    float: left;
+    margin-left: 0.5em;
+    @include pretty-button;
+  }
+
+  .submit {
+    float: right;
+    @include pretty-button;
+  }
+}
+
+#bookmarks {
+  padding: 0;
+  margin: 1em 0;
+}
+
+.bookmark {
+  list-style: none;
+  padding: 0.5em 2em;
+  margin-bottom: 0.5em;
+  border: 0.1em solid black;
+  border-radius: 0.5em;
+
+  .name {
+    display: block;
+    font-size: 1.5em;
+  }
+
+  .url {
+    display: block;
+    font-size: 0.9em;
+    a {
+      text-decoration: none;
+      color: black;
+    }
+  }
+
+  .keyword {
+    color: blue;
+  }
+
+  .edit {
+    float: right;
+    @include pretty-button;
+  }
+}

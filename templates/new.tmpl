@@ -1,0 +1,30 @@
+#encoding UTF-8
+#extends base
+
+#def title
+New bookmark
+#end def
+
+#def content
+<h1>New bookmark</h1>
+<form id="new-form" action="/save" method="post">
+  <div>
+    <label for"name">Name</label>
+    <input class="entry" type="text" name="name"/>
+  </div>
+
+  <div>
+    <label for"url">URL</label>
+    <input class="entry" type="text" name="url"/>
+  </div>
+
+  <div>
+    <label for"keyword">Keyword</label>
+    <input class="entry" type="text" name="keyword"/>
+  </div>
+
+  <input class="submit" type="submit" value="Create"/>
+  <a class="back" href="/">Back</a>
+</form>
+
+#end def

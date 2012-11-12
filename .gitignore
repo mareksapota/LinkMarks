@@ -1,0 +1,5 @@
+.sass-cache
+db.sqlite3
+*.py[co]
+*.css
+templates/*.py
