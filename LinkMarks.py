@@ -52,11 +52,11 @@ class SaveMe():
         return t.render('new')
 
     @safe_access
-    def save(self, name, url, keyword, id = None, back = None):
+    def save(self, name, url, keyword, tags, id = None, back = None):
         if id is None:
-            model.Bookmark.new(name, url, keyword)
+            model.Bookmark.new(name, url, keyword, tags)
         else:
-            model.Bookmark.update(id, name, url, keyword)
+            model.Bookmark.update(id, name, url, keyword, tags)
         if back is None:
             raise cherrypy.HTTPRedirect("/")
         else:

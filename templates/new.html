@@ -2,23 +2,20 @@
 
 {% block title %}New bookmark{% endblock %}
 
+{% macro input(name) %}
+<div>
+  <label for="{{ name|lower }}">{{ name }}</label>
+  <input class="entry" type="text" name="{{ name|lower }}"/>
+</div>
+{% endmacro %}
+
 {% block content %}
 <h1>New bookmark</h1>
 <form id="new-form" action="/save" method="post">
-  <div>
-    <label for"name">Name</label>
-    <input class="entry" type="text" name="name"/>
-  </div>
-
-  <div>
-    <label for"url">URL</label>
-    <input class="entry" type="text" name="url"/>
-  </div>
-
-  <div>
-    <label for"keyword">Keyword</label>
-    <input class="entry" type="text" name="keyword"/>
-  </div>
+  {{ input("Name") }}
+  {{ input("URL") }}
+  {{ input("Keyword") }}
+  {{ input("Tags") }}
 
   <input class="submit" type="submit" value="Create"/>
   <a class="back" href="/">Back</a>

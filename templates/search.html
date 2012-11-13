@@ -12,15 +12,18 @@
         class="edit"
         href="/edit?id={{ bookmark.id }}&back={{ query }}"
       >Edit</a>
-      <span class="name">{{ bookmark.name }}</span>
-      <span class="url">
-        <a href="{{ bookmark.url }}">{{ bookmark.url }}</a>
-      </span>
-      <span class="keyword">
+      <div class="name">
+        {{ bookmark.name }}
         {% if bookmark.keyword %}
-          {{ bookmark.keyword }}
+          <span class="keyword">
+            (<span>{{ bookmark.keyword }}</span>)
+          </span>
         {% endif %}
-      </span>
+      </div>
+      <div class="url">
+        <a href="{{ bookmark.url }}">{{ bookmark.url }}</a>
+      </div>
+      <div class="tags">Tags: {{ bookmark.getTags() }}</div>
     </li>
   {% endfor %}
 </ul>

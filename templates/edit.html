@@ -2,31 +2,28 @@
 
 {% block title %}Edit bookmark{% endblock %}
 
+{% macro input(name, value) %}
+<div>
+  <label for="{{ name|lower }}">{{ name }}</label>
+  <input
+    class="entry"
+    type="text"
+    name="{{ name|lower }}"
+    value="{{ value }}"
+  />
+</div>
+{% endmacro %}
+
 {% block content %}
 <h1>Edit bookmark</h1>
 <form id="edit-form" action="/save" method="post">
   <input type="hidden" name="id" value="{{ bookmark.id }}"/>
   <input type="hidden" name="back" value="{{ back }}"/>
 
-  <div>
-    <label for"name">Name</label>
-    <input class="entry" type="text" name="name" value="{{ bookmark.name }}"/>
-  </div>
-
-  <div>
-    <label for"url">URL</label>
-    <input class="entry" type="text" name="url" value="{{ bookmark.url }}"/>
-  </div>
-
-  <div>
-    <label for"keyword">Keyword</label>
-    <input
-      class="entry"
-      type="text"
-      name="keyword"
-      value="{{ bookmark.keyword }}"
-    />
-  </div>
+  {{ input("Name", bookmark.name) }}
+  {{ input("URL", bookmark.url) }}
+  {{ input("Keyword", bookmark.keyword) }}
+  {{ input("Tags", bookmark.getTags()) }}
 
   <input class="submit" type="submit" value="Update"/>
   <a class="back" href="/search?query={{ back }}">Back</a>
