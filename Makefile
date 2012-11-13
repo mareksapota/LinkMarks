@@ -1,6 +1,3 @@
-%.py : %.tmpl
-	cheetah compile --nobackup $<
-
 %.css : %.scss
 	sass $< $@
 
