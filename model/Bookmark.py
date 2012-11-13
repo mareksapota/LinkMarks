@@ -72,7 +72,10 @@ class Bookmark(Base):
         session = model.Session()
         bookmark.name = name
         bookmark.url = url
-        bookmark.keyword = keyword
+        if keyword:
+            bookmark.keyword = keyword
+        else:
+            bookmark.keyword = None
         bookmark.tags = tags_to_intern(tags)
         session.add(bookmark)
         session.commit()
