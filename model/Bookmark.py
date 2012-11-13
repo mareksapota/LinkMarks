@@ -94,6 +94,9 @@ class Bookmark(Base):
     def getTags(self):
         return intern_to_tags(self.tags)
 
+    def getKeyword(self):
+        return "" if self.keyword is None else self.keyword
+
     def search(self, query):
         query = query[len(self.keyword) + 1:]
         url = self.url.replace("%s", query)
