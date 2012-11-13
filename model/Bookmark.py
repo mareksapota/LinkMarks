@@ -2,7 +2,7 @@ from sqlalchemy import Sequence, Column
 from sqlalchemy import Integer, String
 from sqlalchemy import or_
 
-from Base import Base
+from model.Base import Base
 import model
 
 class Bookmark(Base):

@@ -2,7 +2,7 @@ from sqlalchemy import Sequence, Column
 from sqlalchemy import Integer, String, Boolean, DateTime
 from sqlalchemy import and_
 
-from Base import Base
+from model.Base import Base
 import model
 
 import os
@@ -26,7 +26,7 @@ class Token(Base):
     def issue():
         session = model.Session()
         token = Token()
-        token.value = base64.urlsafe_b64encode(os.urandom(128))
+        token.value = base64.urlsafe_b64encode(os.urandom(128)).decode()
         token.permanent = False
         token.issue_time = datetime.now()
         session.add(token)

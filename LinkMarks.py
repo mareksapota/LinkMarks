@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import cherrypy
@@ -20,7 +20,7 @@ def safe_access(fn):
                 token = cherrypy.request.cookie["token"].value
             model.Token.use(token)
         except:
-            return str(t.expired())
+            return t.render("expired")
 
         cherrypy.response.cookie["token"] = model.Token.issue()
         cherrypy.response.cookie["token"]["path"] = "/"
@@ -32,7 +32,7 @@ def safe_access(fn):
 class SaveMe():
     @safe_access
     def index(self):
-        return str(t.index())
+        return t.render("index")
 
     @safe_access
     def search(self, query = None, redirect = None):
@@ -45,14 +45,11 @@ class SaveMe():
         bookmarks = model.Bookmark.find_all(query)
         if redirect == "yes" and len(bookmarks) == 1:
             raise cherrypy.HTTPRedirect(bookmarks[0].url)
-        v = t.search()
-        v.bookmarks = bookmarks
-        v.query = query
-        return str(v)
+        return t.render('search', bookmarks = bookmarks, query = query)
 
     @safe_access
     def new(self):
-        return str(t.new())
+        return t.render('new')
 
     @safe_access
     def save(self, name, url, keyword, id = None, back = None):
@@ -68,10 +65,7 @@ class SaveMe():
     @safe_access
     def edit(self, id, back):
         bookmark = model.Bookmark.get(id)
-        v = t.edit()
-        v.bookmark = bookmark
-        v.back = back
-        return str(v)
+        return t.render('edit', bookmark = bookmark, back = back)
 
     @safe_access
     def delete(self, id):

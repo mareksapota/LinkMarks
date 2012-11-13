@@ -1,16 +1,12 @@
-#encoding UTF-8
-#extends base
+{% extends "base.html" %}
 
-#def title
-Search your bookmarks
-#end def
+{% block title %}Search your bookmarks{% endblock %}
 
-#def content
+{% block content %}
 <h1>Search your bookmarks</h1>
 <form id="search-form" action="/search">
   <input class="query" type="search" name="query"/>
   <a class="new" href="/new">New</a>
   <input class="submit" type="submit" value="Search"/>
 </form>
-
-#end def
+{% endblock %}

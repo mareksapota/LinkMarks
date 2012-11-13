@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Search results{% endblock %}
+
+{% block content %}
+<a id="search-back" href="/">Back</a>
+<h1>Search results</h1>
+<ul id="bookmarks">
+  {% for bookmark in bookmarks %}
+    <li class="bookmark">
+      <a
+        class="edit"
+        href="/edit?id={{ bookmark.id }}&back={{ query }}"
+      >Edit</a>
+      <span class="name">{{ bookmark.name }}</span>
+      <span class="url">
+        <a href="{{ bookmark.url }}">{{ bookmark.url }}</a>
+      </span>
+      <span class="keyword">
+        {% if bookmark.keyword %}
+          {{ bookmark.keyword }}
+        {% endif %}
+      </span>
+    </li>
+  {% endfor %}
+</ul>
+{% endblock %}

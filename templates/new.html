@@ -1,11 +1,8 @@
-#encoding UTF-8
-#extends base
+{% extends "base.html" %}
 
-#def title
-New bookmark
-#end def
+{% block title %}New bookmark{% endblock %}
 
-#def content
+{% block content %}
 <h1>New bookmark</h1>
 <form id="new-form" action="/save" method="post">
   <div>
@@ -26,5 +23,4 @@ New bookmark
   <input class="submit" type="submit" value="Create"/>
   <a class="back" href="/">Back</a>
 </form>
-
-#end def
+{% endblock %}

@@ -1,6 +1,6 @@
-from Base import Base
-from Bookmark import Bookmark
-from Token import Token
+from model.Base import Base
+from model.Bookmark import Bookmark
+from model.Token import Token
 
 from sqlalchemy import create_engine
 engine = create_engine("sqlite:///db.sqlite3", echo = False)
