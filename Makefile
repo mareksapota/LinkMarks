@@ -12,7 +12,6 @@ templates: $(CSS)
 
 .PHONY: clean
 clean:
-	-rm -f $(shell find . -type f -name \*.py[co])
 	-rm -rf $(shell find . -type d -name __pycache__)
 	-rm -f $(CSS)
 	-rm -rf .sass-cache
