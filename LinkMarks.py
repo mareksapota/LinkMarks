@@ -5,6 +5,7 @@ import cherrypy
 from cherrypy.process.plugins import PIDFile
 import os
 import sys
+import re
 
 import model
 import templates as t
@@ -71,6 +72,15 @@ class SaveMe():
     def delete(self, id):
         model.Bookmark.delete(id)
         raise cherrypy.HTTPRedirect("/")
+
+    @safe_access
+    def redirect(self, to = None):
+        if not to:
+            # Empty query.
+            raise cherrypy.HTTPRedirect("/")
+        if not re.match("\Ahttps?://", to):
+            to = "http://" + to
+        raise cherrypy.HTTPRedirect(to)
 
 cherrypy.config.update({
     "server.socket_port": 8080,

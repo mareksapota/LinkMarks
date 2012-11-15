@@ -3,13 +3,16 @@
 {% block title %}Search results{% endblock %}
 
 {% block content %}
-<a id="search-back" href="/">Back</a>
+<a class="right button" href="/">Back</a>
+<a class="right button" href="/redirect?to={{ query }}">
+  I didn’t want to search
+</a>
 <h1>Search results</h1>
 <ul id="bookmarks">
   {% for bookmark in bookmarks %}
     <li class="bookmark">
       <a
-        class="edit"
+        class="right button"
         href="/edit?id={{ bookmark.id }}&back={{ query }}"
       >Edit</a>
       <div class="name">

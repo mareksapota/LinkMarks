@@ -47,7 +47,7 @@ class Token(Base):
     def use(value):
         Token.clean()
         session = model.Session()
-        token = session.query(Token).filter(Token.value == value).one()
+        token = session.query(Token).filter(Token.value == value).first()
         if not token.permanent:
             session.delete(token)
         session.commit()

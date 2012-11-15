@@ -1,4 +1,4 @@
-@mixin pretty-button {
+.button {
   $button-bg: green;
   $button-fg: white;
 
@@ -15,6 +15,22 @@
   font-weight: bold;
 }
 
+.right.button + .right.button {
+  margin-right: 0.5em;
+}
+
+.left.button + .left.button {
+  margin-left: 0.5em;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
 @mixin border-box {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -27,26 +43,8 @@ body {
   margin: 1em auto;
 }
 
-#search-back {
-  float: right;
-  @include pretty-button;
-}
-
-#search-form {
-  .query {
+#search-form .query {
     width: 100%;
-    @include border-box;
-  }
-
-  .new {
-    float: left;
-    @include pretty-button;
-  }
-
-  .submit {
-    float: right;
-    @include pretty-button;
-  }
 }
 
 #new-form, #edit-form {
@@ -58,23 +56,6 @@ body {
 
   .entry {
     width: 40em;
-    @include border-box;
-  }
-
-  .back {
-    float: left;
-    @include pretty-button;
-  }
-
-  .delete {
-    float: left;
-    margin-left: 0.5em;
-    @include pretty-button;
-  }
-
-  .submit {
-    float: right;
-    @include pretty-button;
   }
 }
 
@@ -107,10 +88,5 @@ body {
     span {
         color: blue;
     }
-  }
-
-  .edit {
-    float: right;
-    @include pretty-button;
   }
 }

@@ -25,8 +25,8 @@
   {{ input("Keyword", bookmark.getKeyword()) }}
   {{ input("Tags", bookmark.getTags()) }}
 
-  <input class="submit" type="submit" value="Update"/>
-  <a class="back" href="/search?query={{ back }}">Back</a>
-  <a class="delete confirm" href="/delete?id={{ bookmark.id }}">Delete</a>
+  <a class="left button" href="/search?query={{ back }}">Back</a>
+  <a class="left button confirm" href="/delete?id={{ bookmark.id }}">Delete</a>
+  <input class="right button" type="submit" value="Update"/>
 </form>
 {% endblock %}
