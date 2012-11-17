@@ -56,22 +56,21 @@ class Bookmark(Base):
     def new(name, url, keyword, tags):
         session = model.Session()
         bookmark = Bookmark()
-        bookmark.name = name
-        bookmark.url = url
-        bookmark.tags = tags_to_intern(tags)
-        if keyword:
-            bookmark.keyword = keyword
-        else:
-            bookmark.keyword = None
+        bookmark.name = ""
+        bookmark.url = ""
+        bookmark.tags = ""
         session.add(bookmark)
         session.commit()
+        id = bookmark.id
+        session.close()
+        Bookmark.update(id, name, url, keyword, tags)
 
     @staticmethod
     def update(id, name, url, keyword, tags):
         bookmark = Bookmark.get(id)
         session = model.Session()
         bookmark.name = name
-        bookmark.url = url
+        bookmark.url = url.strip()
         if keyword:
             bookmark.keyword = keyword
         else:

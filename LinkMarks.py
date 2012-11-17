@@ -69,9 +69,12 @@ class SaveMe():
         return t.render('edit', bookmark = bookmark, back = back)
 
     @safe_access
-    def delete(self, id):
+    def delete(self, id, back = None):
         model.Bookmark.delete(id)
-        raise cherrypy.HTTPRedirect("/")
+        if back is None:
+            raise cherrypy.HTTPRedirect("/")
+        else:
+            raise cherrypy.HTTPRedirect("/search?query=" + back)
 
     @safe_access
     def redirect(self, to = None):

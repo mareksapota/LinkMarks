@@ -26,7 +26,10 @@
   {{ input("Tags", bookmark.getTags()) }}
 
   <a class="left button" href="/search?query={{ back }}">Back</a>
-  <a class="left button confirm" href="/delete?id={{ bookmark.id }}">Delete</a>
+  <a
+    class="left button confirm"
+    href="/delete?id={{ bookmark.id }}&back={{ back }}"
+  >Delete</a>
   <input class="right button" type="submit" value="Update"/>
 </form>
 {% endblock %}
