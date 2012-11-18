@@ -30,7 +30,7 @@ def safe_access(fn):
 
     return wrapped
 
-class SaveMe():
+class LinkMarks():
     @safe_access
     def index(self):
         return t.render("index")
@@ -108,4 +108,4 @@ for d in ["style", "script"]:
             }
         }
 
-cherrypy.quickstart(SaveMe(), config = conf)
+cherrypy.quickstart(LinkMarks(), config = conf)
