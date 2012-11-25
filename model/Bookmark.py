@@ -100,6 +100,8 @@ class Bookmark(Base):
         return "" if self.keyword is None else self.keyword
 
     def search(self, query):
-        query = query[len(self.keyword) + 1:]
-        url = self.url.replace("%s", query)
+        url = self.url
+        if self.keyword is not None:
+            query = query[len(self.keyword) + 1:]
+            url = url.replace("%s", query)
         return url

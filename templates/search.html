@@ -24,7 +24,7 @@
         {% endif %}
       </div>
       <div class="url">
-        <a href="{{ bookmark.url }}">{{ bookmark.url }}</a>
+        <a href="{{ bookmark.search("") }}">{{ bookmark.url }}</a>
       </div>
       <div class="tags">Tags: {{ bookmark.getTags() }}</div>
     </li>

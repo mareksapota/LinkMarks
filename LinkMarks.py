@@ -45,12 +45,12 @@ class LinkMarks():
                 raise cherrypy.HTTPRedirect(key_bookmark.search(query))
         bookmarks = model.Bookmark.find_all(query)
         if redirect == "yes" and len(bookmarks) == 1:
-            raise cherrypy.HTTPRedirect(bookmarks[0].url)
-        return t.render('search', bookmarks = bookmarks, query = query)
+            raise cherrypy.HTTPRedirect(bookmarks[0].search(""))
+        return t.render("search", bookmarks = bookmarks, query = query)
 
     @safe_access
     def new(self):
-        return t.render('new')
+        return t.render("new")
 
     @safe_access
     def save(self, name, url, keyword, tags, id = None, back = None):
@@ -66,7 +66,7 @@ class LinkMarks():
     @safe_access
     def edit(self, id, back):
         bookmark = model.Bookmark.get(id)
-        return t.render('edit', bookmark = bookmark, back = back)
+        return t.render("edit", bookmark = bookmark, back = back)
 
     @safe_access
     def delete(self, id, back = None):
