@@ -87,6 +87,7 @@ class LinkMarks():
 
 cherrypy.config.update({
     "server.socket_port": 8080,
+    "tools.gzip.on": True,
 })
 
 if len(sys.argv) > 1 and sys.argv[1] == "production":
