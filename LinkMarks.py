@@ -30,6 +30,19 @@ def safe_access(fn):
 
     return wrapped
 
+def perform_redirect(url):
+    # Cherrypy 3.2 has a bug (feature?) that returns something like
+    # "=?utf-8?b?someweirdstring" in headers when redirected to a unicode URL.
+    try:
+        url.encode("ascii")
+        utf = False
+    except:
+        utf = True
+    if not utf:
+        raise cherrypy.HTTPRedirect(url)
+    else:
+        return t.render("jsredirect", url = url)
+
 class LinkMarks():
     @safe_access
     def index(self):
@@ -38,14 +51,14 @@ class LinkMarks():
     @safe_access
     def search(self, query = None, redirect = None):
         if query is None:
-            raise cherrypy.HTTPRedirect("/")
+            return perform_redirect("/")
         if query:
             key_bookmark = model.Bookmark.find_keyword(query.split()[0])
             if key_bookmark is not None:
-                raise cherrypy.HTTPRedirect(key_bookmark.search(query))
+                return perform_redirect(key_bookmark.search(query))
         bookmarks = model.Bookmark.find_all(query)
         if redirect == "yes" and len(bookmarks) == 1:
-            raise cherrypy.HTTPRedirect(bookmarks[0].search(""))
+            return perform_redirect(bookmarks[0].search(""))
         return t.render("search", bookmarks = bookmarks, query = query)
 
     @safe_access
@@ -59,9 +72,9 @@ class LinkMarks():
         else:
             model.Bookmark.update(id, name, url, keyword, tags)
         if back is None:
-            raise cherrypy.HTTPRedirect("/")
+            return perform_redirect("/")
         else:
-            raise cherrypy.HTTPRedirect("/search?query=" + back)
+            return perform_redirect("/search?query=" + back)
 
     @safe_access
     def edit(self, id, back):
@@ -72,18 +85,18 @@ class LinkMarks():
     def delete(self, id, back = None):
         model.Bookmark.delete(id)
         if back is None:
-            raise cherrypy.HTTPRedirect("/")
+            return perform_redirect("/")
         else:
-            raise cherrypy.HTTPRedirect("/search?query=" + back)
+            return perform_redirect("/search?query=" + back)
 
     @safe_access
     def redirect(self, to = None):
         if not to:
             # Empty query.
-            raise cherrypy.HTTPRedirect("/")
+            return perform_redirect("/")
         if not re.match("\Ahttps?://", to):
             to = "http://" + to
-        raise cherrypy.HTTPRedirect(to)
+        return perform_redirect(to)
 
 cherrypy.config.update({
     "server.socket_port": 8080,
