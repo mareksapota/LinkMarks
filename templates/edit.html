@@ -23,7 +23,7 @@
   {{ input("Name", bookmark.name) }}
   {{ input("URL", bookmark.url) }}
   {{ input("Keyword", bookmark.getKeyword()) }}
-  {{ input("Tags", bookmark.getTags()) }}
+  {{ input("Tags", bookmark.getTagString()) }}
 
   <a class="left button" href="/search?query={{ back }}">Back</a>
   <a

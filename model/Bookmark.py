@@ -93,8 +93,14 @@ class Bookmark(Base):
         session.delete(bookmark)
         session.commit()
 
-    def getTags(self):
+    def getTagString(self):
         return intern_to_tags(self.tags)
+
+    def getTagList(self):
+        if self.tags:
+            return self.tags.split(',')
+        else:
+            return []
 
     def getKeyword(self):
         return "" if self.keyword is None else self.keyword

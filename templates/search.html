@@ -26,7 +26,7 @@
       <div class="url">
         <a href="{{ bookmark.search("") }}">{{ bookmark.url }}</a>
       </div>
-      <div class="tags">Tags: {{ bookmark.getTags() }}</div>
+      <div class="tags">Tags: {{ bookmark.getTagString() }}</div>
     </li>
   {% endfor %}
 </ul>
