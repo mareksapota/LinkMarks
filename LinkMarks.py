@@ -106,12 +106,7 @@ class LinkMarks():
         cherrypy.response.headers['Content-Type'] = \
             "application/opensearchdescription+xml"
         host = cherrypy.request.base
-        token = cherrypy.request.token
-        return t.render_template(
-            "opensearchdescription.xml",
-            host = host,
-            token = token
-        )
+        return t.render_template("opensearchdescription.xml", host = host)
 
     @safe_access
     def suggestion(self, query, count):
