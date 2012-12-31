@@ -101,6 +101,7 @@ class LinkMarks():
             to = "http://" + to
         return perform_redirect(to)
 
+    # OpenSearch
     @safe_access
     def opensearchdescription_xml(self):
         cherrypy.response.headers['Content-Type'] = \
@@ -112,6 +113,11 @@ class LinkMarks():
     def suggestion(self, query, count):
         bookmarks = model.Bookmark.find_all(query, count)
         return json.dumps([query, [b.name for b in bookmarks]])
+
+    @safe_access
+    def addengine(self):
+        host = cherrypy.request.base
+        return t.render("addengine", host = host)
 
 cherrypy.config.update({
     "server.socket_port": 8080,

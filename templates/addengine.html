@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Add LinkMarks search engine</h1>
+<a
+  class="button"
+  href="#"
+  id="addengine"
+  data-token="{{ token }}"
+  data-host="{{ host }}"
+>Add</a>
+{% endblock %}
+
+{% block script %}
+<script src="/static/script/addengine.js"></script>
+{% endblock %}
