@@ -1,7 +1,7 @@
 %.css : %.scss
 	sass $< $@
 
-SCSS=$(shell find style/ -type f -name \*.scss)
+SCSS=$(shell find static/ -type f -name \*.scss)
 CSS=$(patsubst %.scss, %.css, $(SCSS))
 
 .PHONY: templates

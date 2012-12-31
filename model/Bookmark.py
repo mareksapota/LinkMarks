@@ -39,10 +39,10 @@ class Bookmark(Base):
             return None
 
     @staticmethod
-    def find_all(query):
+    def find_all(query, count = None):
         like_query = "%{0}%".format(query)
         session = model.Session()
-        return session.query(Bookmark).filter(or_(
+        query = session.query(Bookmark).filter(or_(
             Bookmark.name.like(like_query),
             Bookmark.url.like(like_query),
             Bookmark.tags.like(like_query)
@@ -50,7 +50,10 @@ class Bookmark(Base):
             Bookmark.name
         ).order_by(
             Bookmark.id
-        ).all()
+        )
+        if count is not None:
+            query = query.limit(count)
+        return query.all()
 
     @staticmethod
     def new(name, url, keyword, tags):

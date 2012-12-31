@@ -60,5 +60,6 @@ class Token(Base):
             Token.issue_time <= old,
             Token.permanent == False
         )).all()
-        map(session.delete, stale)
+        for token in stale:
+            session.delete(token)
         session.commit()

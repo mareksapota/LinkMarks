@@ -6,6 +6,7 @@ from cherrypy.process.plugins import PIDFile
 import os
 import sys
 import re
+import json
 
 import model
 import templates as t
@@ -19,6 +20,8 @@ def safe_access(fn):
                 token = kwargs.pop("token")
             else:
                 token = cherrypy.request.cookie["token"].value
+            # Save the token so actions can use it.
+            cherrypy.request.token = token
             model.Token.use(token)
         except:
             return t.render("expired")
@@ -98,6 +101,23 @@ class LinkMarks():
             to = "http://" + to
         return perform_redirect(to)
 
+    @safe_access
+    def opensearchdescription_xml(self):
+        cherrypy.response.headers['Content-Type'] = \
+            "application/opensearchdescription+xml"
+        host = cherrypy.request.base
+        token = cherrypy.request.token
+        return t.render_template(
+            "opensearchdescription.xml",
+            host = host,
+            token = token
+        )
+
+    @safe_access
+    def suggestion(self, query, count):
+        bookmarks = model.Bookmark.find_all(query, count)
+        return json.dumps([query, [b.name for b in bookmarks]])
+
 cherrypy.config.update({
     "server.socket_port": 8080,
     "tools.gzip.on": True,
@@ -110,7 +130,7 @@ if len(sys.argv) > 1 and sys.argv[1] == "production":
     PIDFile(cherrypy.engine, "/tmp/linkmarks.pid").subscribe()
 
 conf = {}
-for d in ["style", "script"]:
+for d in ["static/style", "static/script"]:
     p = os.path.abspath(d)
     for f in os.listdir(d):
         conf["/{0}/{1}".format(d, f)] = {

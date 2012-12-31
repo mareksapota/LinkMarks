@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
+  <ShortName>LinkMarks</ShortName>
+  <Description>Use LinkMarks search</Description>
+  <InputEncoding>UTF-8</InputEncoding>
+  <OutputEncoding>UTF-8</OutputEncoding>
+
+  <Url
+    type="text/html"
+    template="{{ host }}/search?token={{ token }}&amp;redirect=yes&amp;query={searchTerms}"
+  />
+
+  <Url
+    type="application/x-suggestions+json"
+    rel="suggestions"
+    template="{{ host }}/suggestion?token={{ token }}&amp;query={searchTerms}&amp;count={count}"
+  />
+
+  <Url
+    type="application/opensearchdescription+xml"
+    rel="self"
+    template="{{ host }}/opensearchdescription.xml?token={{ token }}"
+  />
+</OpenSearchDescription>

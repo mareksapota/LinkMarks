@@ -3,5 +3,8 @@ env = Environment(loader = FileSystemLoader("templates"))
 env.autoescape = True
 
 def render(tmpl, **kwargs):
-    t = env.get_template(tmpl + ".html")
-    return t.render(**kwargs)
+    return render_template(tmpl + ".html", **kwargs)
+
+def render_template(tmpl, **kwargs):
+    t = env.get_template(tmpl)
+    return t.render(**kwargs).encode("utf-8")
