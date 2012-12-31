@@ -116,6 +116,9 @@ class Bookmark(Base):
     def get_keyword(self):
         return "" if self.keyword is None else self.keyword
 
+    def get_suggestions_url(self):
+        return "" if self.suggestions_url is None else self.suggestions_url
+
     def search(self, query):
         url = self.url
         if self.keyword is not None:
