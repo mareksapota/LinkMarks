@@ -120,7 +120,8 @@ cherrypy.config.update({
 
 if len(sys.argv) > 1 and sys.argv[1] == "production":
     cherrypy.config.update({
-        "environment": "production"
+        "environment": "production",
+        "tools.proxy.on"
     })
     PIDFile(cherrypy.engine, "/tmp/linkmarks.pid").subscribe()
 
