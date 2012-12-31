@@ -2,16 +2,20 @@
 
 {% block title %}Edit bookmark{% endblock %}
 
-{% macro input(name, value) %}
+{% macro linput(label, name, value) %}
 <div>
-  <label for="{{ name|lower }}">{{ name }}</label>
+  <label for="{{ name }}">{{ label }}</label>
   <input
     class="entry"
     type="text"
-    name="{{ name|lower }}"
+    name="{{ name }}"
     value="{{ value }}"
   />
 </div>
+{% endmacro %}
+
+{% macro input(label, value) %}
+{{ linput(label, label|lower, value) }}
 {% endmacro %}
 
 {% block content %}
@@ -22,8 +26,9 @@
 
   {{ input("Name", bookmark.name) }}
   {{ input("URL", bookmark.url) }}
-  {{ input("Keyword", bookmark.getKeyword()) }}
-  {{ input("Tags", bookmark.getTagString()) }}
+  {{ input("Keyword", bookmark.get_keyword()) }}
+  {{ input("Tags", bookmark.get_tag_string()) }}
+  {{ linput("Suggestions URL", "suggestions_url", bookmark.suggestions_url ) }}
 
   <a class="left button" href="/search?query={{ back }}">Back</a>
   <a

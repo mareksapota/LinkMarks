@@ -2,6 +2,9 @@ from sqlalchemy import Sequence, Column
 from sqlalchemy import Integer, String
 from sqlalchemy import or_
 
+import urllib
+import json
+
 from model.Base import Base
 import model
 
@@ -25,6 +28,7 @@ class Bookmark(Base):
     name = Column(String, nullable = False)
     url = Column(String, nullable = False)
     keyword = Column(String)
+    suggestions_url = Column(String)
     # Coma delimited list of tags.
     tags = Column(String, nullable = False)
 
@@ -56,7 +60,7 @@ class Bookmark(Base):
         return query.all()
 
     @staticmethod
-    def new(name, url, keyword, tags):
+    def new(name, url, keyword, tags, suggestions_url):
         session = model.Session()
         bookmark = Bookmark()
         bookmark.name = ""
@@ -66,10 +70,10 @@ class Bookmark(Base):
         session.commit()
         id = bookmark.id
         session.close()
-        Bookmark.update(id, name, url, keyword, tags)
+        Bookmark.update(id, name, url, keyword, tags, suggestions_url)
 
     @staticmethod
-    def update(id, name, url, keyword, tags):
+    def update(id, name, url, keyword, tags, suggestions_url):
         bookmark = Bookmark.get(id)
         session = model.Session()
         bookmark.name = name
@@ -78,6 +82,10 @@ class Bookmark(Base):
             bookmark.keyword = keyword
         else:
             bookmark.keyword = None
+        if suggestions_url:
+            bookmark.suggestions_url = suggestions_url
+        else:
+            bookmark.suggestions_url = None
         bookmark.tags = tags_to_intern(tags)
         session.add(bookmark)
         session.commit()
@@ -96,16 +104,16 @@ class Bookmark(Base):
         session.delete(bookmark)
         session.commit()
 
-    def getTagString(self):
+    def get_tag_string(self):
         return intern_to_tags(self.tags)
 
-    def getTagList(self):
+    def get_tag_list(self):
         if self.tags:
             return self.tags.split(',')
         else:
             return []
 
-    def getKeyword(self):
+    def get_keyword(self):
         return "" if self.keyword is None else self.keyword
 
     def search(self, query):
@@ -114,3 +122,18 @@ class Bookmark(Base):
             query = query[len(self.keyword) + 1:]
             url = url.replace("%s", query)
         return url
+
+    def get_suggestions(self, query):
+        url = self.suggestions_url
+        results = None
+        if url is not None and self.keyword is not None:
+            url = url.replace("%s", query[len(self.keyword) + 1:])
+            req = urllib.request.urlopen(url)
+            results = req.read()
+            req.close()
+            results = json.loads(results.decode("UTF-8"))
+            results = [
+                query,
+                ["{0} {1}".format(self.keyword, s) for s in results[1]]
+            ]
+        return results

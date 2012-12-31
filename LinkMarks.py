@@ -11,6 +11,9 @@ import json
 import model
 import templates as t
 
+# Stop if schema version doesn’t match supported version.
+model.SchemaVersion.check_version()
+
 def safe_access(fn):
 
     @cherrypy.expose
@@ -69,11 +72,11 @@ class LinkMarks():
         return t.render("new")
 
     @safe_access
-    def save(self, name, url, keyword, tags, id = None, back = None):
+    def save(self,name, url, keyword, tags, suggestions_url, id = None, back = None):
         if id is None:
-            model.Bookmark.new(name, url, keyword, tags)
+            model.Bookmark.new(name, url, keyword, tags, suggestions_url)
         else:
-            model.Bookmark.update(id, name, url, keyword, tags)
+            model.Bookmark.update(id, name, url, keyword, tags, suggestions_url)
         if back is None:
             return perform_redirect("/")
         else:
@@ -111,8 +114,16 @@ class LinkMarks():
 
     @safe_access
     def suggestion(self, query, count):
-        bookmarks = model.Bookmark.find_all(query, count)
-        return json.dumps([query, [b.name for b in bookmarks]])
+        try:
+            key_bookmark = model.Bookmark.find_keyword(query.split()[0])
+            if key_bookmark is not None:
+                results = key_bookmark.get_suggestions(query)
+                if results is not None:
+                    return json.dumps(results)
+            bookmarks = model.Bookmark.find_all(query, count)
+            return json.dumps([query, [b.name for b in bookmarks]])
+        except:
+            return json.dumps([query, []])
 
     @safe_access
     def addengine(self):

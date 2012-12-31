@@ -19,14 +19,17 @@
         {{ bookmark.name }}
         {% if bookmark.keyword %}
           <span class="keyword">
-            (<span>{{ bookmark.keyword }}</span>)
+            (<span class="blue">{{ bookmark.keyword }}</span>)
+            {% if bookmark.suggestions_url %}
+            <span class="small">suggestions enabled</span>
+            {% endif %}
           </span>
         {% endif %}
       </div>
       <div class="url">
         <a href="{{ bookmark.search("") }}">{{ bookmark.url }}</a>
       </div>
-      <div class="tags">Tags: {{ bookmark.getTagString() }}</div>
+      <div class="tags">Tags: {{ bookmark.get_tag_string() }}</div>
     </li>
   {% endfor %}
 </ul>

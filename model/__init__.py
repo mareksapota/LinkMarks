@@ -1,6 +1,7 @@
 from model.Base import Base
 from model.Bookmark import Bookmark
 from model.Token import Token
+from model.SchemaVersion import SchemaVersion
 
 from sqlalchemy import create_engine
 engine = create_engine("sqlite:///db.sqlite3", echo = False)

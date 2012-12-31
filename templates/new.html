@@ -2,11 +2,15 @@
 
 {% block title %}New bookmark{% endblock %}
 
-{% macro input(name) %}
+{% macro linput(label, name) %}
 <div>
-  <label for="{{ name|lower }}">{{ name }}</label>
-  <input class="entry" type="text" name="{{ name|lower }}"/>
+  <label for="{{ name }}">{{ label }}</label>
+  <input class="entry" type="text" name="{{ name }}"/>
 </div>
+{% endmacro %}
+
+{% macro input(label) %}
+{{ linput(label, label|lower) }}
 {% endmacro %}
 
 {% block content %}
@@ -16,6 +20,7 @@
   {{ input("URL") }}
   {{ input("Keyword") }}
   {{ input("Tags") }}
+  {{ linput("Suggestions URL", "suggestions_url") }}
 
   <input class="right button" type="submit" value="Create"/>
   <a class="left button" href="/">Back</a>
