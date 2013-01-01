@@ -129,7 +129,12 @@ class Bookmark(Base):
     def get_suggestions(self, query, user_agent):
         url = self.suggestions_url
         results = None
-        if url is not None and self.keyword is not None:
+        if (
+            # Don't forward trivial queries.
+            len(query) > len(self.keyword) + 1 and
+            url is not None and
+            self.keyword is not None
+        ):
             url = url.replace("%s", query[len(self.keyword) + 1:])
             req = urllib.request.Request(
                 url,
