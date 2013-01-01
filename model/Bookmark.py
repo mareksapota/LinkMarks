@@ -126,12 +126,16 @@ class Bookmark(Base):
             url = url.replace("%s", query)
         return url
 
-    def get_suggestions(self, query):
+    def get_suggestions(self, query, user_agent):
         url = self.suggestions_url
         results = None
         if url is not None and self.keyword is not None:
             url = url.replace("%s", query[len(self.keyword) + 1:])
-            req = urllib.request.urlopen(url)
+            req = urllib.request.Request(
+                url,
+                headers = { "User-Agent": user_agent }
+            )
+            req = urllib.request.urlopen(req)
             results = req.read()
             req.close()
             results = json.loads(results.decode("UTF-8"))

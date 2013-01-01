@@ -115,9 +115,10 @@ class LinkMarks():
     @safe_access
     def suggestion(self, query, count):
         try:
+            user_agent = cherrypy.request.headers["User-Agent"]
             key_bookmark = model.Bookmark.find_keyword(query.split()[0])
             if key_bookmark is not None:
-                results = key_bookmark.get_suggestions(query)
+                results = key_bookmark.get_suggestions(query, user_agent)
                 if results is not None:
                     return json.dumps(results)
             bookmarks = model.Bookmark.find_all(query, count)
