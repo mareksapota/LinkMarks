@@ -27,7 +27,7 @@ def safe_access(fn):
             cherrypy.request.token = token
             model.Token.use(token)
         except:
-            return t.render("expired")
+            return t.render("expired", token = None)
 
         cherrypy.response.cookie["token"] = model.Token.issue()
         cherrypy.response.cookie["token"]["path"] = "/"

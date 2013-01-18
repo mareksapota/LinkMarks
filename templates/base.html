@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/style/base.css" type="text/css">
-    <link
-      rel="search"
-      type="application/opensearchdescription+xml"
-      title="LinkMarks search"
-      href="/opensearchdescription.xml?token={{ token }}"
-    >
+    {% if token %}
+      <link
+        rel="search"
+        type="application/opensearchdescription+xml"
+        title="LinkMarks search"
+        href="/opensearchdescription.xml?token={{ token }}"
+      >
+    {% endif %}
   </head>
   <body>
     {% block content %}{% endblock %}
