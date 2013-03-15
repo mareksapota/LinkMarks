@@ -4,7 +4,7 @@
 
 {% block content %}
 <a class="right button" href="/">Back</a>
-<a class="right button" href="/redirect?to={{ query }}">
+<a class="right button" href="/nosearch?query={{ query }}">
   I didn’t want to search
 </a>
 <h1>Search results</h1>
@@ -34,3 +34,5 @@
   {% endfor %}
 </ul>
 {% endblock %}
+
+<!-- vim: set filetype=jinja sw=2 sts=2 : -->

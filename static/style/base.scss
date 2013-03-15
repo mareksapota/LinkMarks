@@ -31,6 +31,10 @@
   float: right;
 }
 
+.wide {
+  width: 100%;
+}
+
 @mixin border-box {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
@@ -94,3 +98,5 @@ body {
     }
   }
 }
+
+/* vim: set sw=2 sts=2 : */

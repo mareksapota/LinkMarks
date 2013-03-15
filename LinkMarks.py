@@ -55,6 +55,12 @@ class LinkMarks():
         return t.render("index")
 
     @safe_access
+    def nosearch(self, query = None):
+        if query is None:
+            return perform_redirect("/")
+        return t.render("nosearch", query = query);
+
+    @safe_access
     def search(self, query = None, redirect = None):
         if query is None:
             return perform_redirect("/")
