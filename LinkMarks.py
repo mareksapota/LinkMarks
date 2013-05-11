@@ -5,9 +5,10 @@ import cherrypy
 from cherrypy.process.plugins import PIDFile
 import os
 import sys
-import re
 import json
 
+from utils.Query import query_arg, valid_query_arg
+from utils.redirect import perform_redirect
 import model
 import templates as t
 
@@ -36,42 +37,39 @@ def safe_access(fn):
 
     return wrapped
 
-def perform_redirect(url):
-    # Cherrypy 3.2 has a bug (feature?) that returns something like
-    # "=?utf-8?b?someweirdstring" in headers when redirected to a unicode URL.
-    try:
-        url.encode("ascii")
-        utf = False
-    except:
-        utf = True
-    if not utf:
-        raise cherrypy.HTTPRedirect(url)
-    else:
-        return t.render("jsredirect", url = url)
-
 class LinkMarks():
     @safe_access
     def index(self):
         return t.render("index")
 
     @safe_access
+    @valid_query_arg("/")
     def nosearch(self, query = None):
-        if query is None:
-            return perform_redirect("/")
         return t.render("nosearch", query = query);
 
     @safe_access
+    @valid_query_arg("/")
     def search(self, query = None, redirect = None):
-        if query is None:
-            return perform_redirect("/")
-        if query:
-            key_bookmark = model.Bookmark.find_keyword(query.split()[0])
-            if key_bookmark is not None:
-                return perform_redirect(key_bookmark.search(query))
-        bookmarks = model.Bookmark.find_all(query)
+        key_bookmark = model.KeywordBookmark.find(query.keyword())
+        if key_bookmark is not None:
+            return perform_redirect(key_bookmark.search(query.body()))
+
+        bookmarks = model.BookmarkBase.find_all(query)
         if redirect == "yes" and len(bookmarks) == 1:
-            return perform_redirect(bookmarks[0].search(""))
-        return t.render("search", bookmarks = bookmarks, query = query)
+            return perform_redirect(bookmarks[0].get_url())
+        return t.render(
+            "search",
+            bookmarks = bookmarks,
+            query = query,
+        )
+
+    @safe_access
+    def all(self):
+        bookmarks = model.BookmarkBase.all()
+        return t.render(
+            "all",
+            bookmarks = bookmarks,
+        )
 
     @safe_access
     def new(self):
@@ -80,17 +78,18 @@ class LinkMarks():
     @safe_access
     def save(self,name, url, keyword, tags, suggestions_url, id = None, back = None):
         if id is None:
-            model.Bookmark.new(name, url, keyword, tags, suggestions_url)
+            model.BookmarkBase.new(name, url, keyword, tags, suggestions_url)
         else:
-            model.Bookmark.update(id, name, url, keyword, tags, suggestions_url)
+            bookmark = model.BookmarkBase.get(id)
+            bookmark.update(name, url, keyword, tags, suggestions_url)
         if back is None:
             return perform_redirect("/")
         else:
-            return perform_redirect("/search?query=" + back)
+            return perform_redirect(back)
 
     @safe_access
     def edit(self, id, back):
-        bookmark = model.Bookmark.get(id)
+        bookmark = model.BookmarkBase.get(id)
         return t.render("edit", bookmark = bookmark, back = back)
 
     @safe_access
@@ -99,16 +98,7 @@ class LinkMarks():
         if back is None:
             return perform_redirect("/")
         else:
-            return perform_redirect("/search?query=" + back)
-
-    @safe_access
-    def redirect(self, to = None):
-        if not to:
-            # Empty query.
-            return perform_redirect("/")
-        if not re.match("\Ahttps?://", to):
-            to = "http://" + to
-        return perform_redirect(to)
+            return perform_redirect(back)
 
     # OpenSearch
     @safe_access
@@ -119,18 +109,24 @@ class LinkMarks():
         return t.render_template("opensearchdescription.xml", host = host)
 
     @safe_access
-    def suggestion(self, query, count):
+    @query_arg
+    def suggestion(self, count, query = None):
         try:
+            if query is None or not query.is_valid():
+                raise Exception("Invalid query")
             user_agent = cherrypy.request.headers["User-Agent"]
-            key_bookmark = model.Bookmark.find_keyword(query.split()[0])
+            key_bookmark = model.KeywordBookmark.find(query.keyword())
             if key_bookmark is not None:
                 results = key_bookmark.get_suggestions(query, user_agent)
                 if results is not None:
                     return json.dumps(results)
-            bookmarks = model.Bookmark.find_all(query, count)
-            return json.dumps([query, [b.name for b in bookmarks]])
+            bookmarks = model.BookmarkBase.find_all(query, int(count))
+            return json.dumps([
+                str(query.url_unsafe()),
+                [b.name for b in bookmarks],
+            ])
         except:
-            return json.dumps([query, []])
+            return json.dumps([str(query.url_unsafe()), []])
 
     @safe_access
     def addengine(self):

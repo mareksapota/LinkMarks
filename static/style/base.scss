@@ -1,5 +1,5 @@
 .button {
-  $button-bg: green;
+  $button-bg: darken(#4c66a4, 6%);
   $button-fg: white;
 
   padding: 0.5em;
@@ -31,8 +31,8 @@
   float: right;
 }
 
-.wide {
-  width: 100%;
+.clear {
+  clear: both;
 }
 
 @mixin border-box {

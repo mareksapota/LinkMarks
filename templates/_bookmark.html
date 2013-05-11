@@ -1,0 +1,33 @@
+{% macro bookmark(b, back) %}
+  <li class="bookmark">
+    <a
+      class="right button"
+      href="/edit?id={{ b.id }}&back={{ back }}"
+    >Edit</a>
+    <div class="name">
+      {{ b.name }}
+      {% if b.keyword %}
+        <span class="keyword">
+          (<span class="blue">{{ b.keyword }}</span>)
+          {% if b.suggestions_url %}
+          <span class="small">suggestions enabled</span>
+          {% endif %}
+        </span>
+      {% endif %}
+    </div>
+    <div class="url">
+      <a href="{{ b.get_url() }}">{{ b.url }}</a>
+    </div>
+    <div class="tags">Tags: {{ b.get_tag_string() }}</div>
+  </li>
+{% endmacro %}
+
+{% macro bookmarks(b, back) %}
+<ul id="bookmarks">
+  {% for i in b %}
+    {{ bookmark(i, back) }}
+  {% endfor %}
+</ul>
+{% endmacro %}
+
+<!-- vim: set filetype=jinja sw=2 sts=2 : -->

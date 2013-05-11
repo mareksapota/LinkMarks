@@ -22,3 +22,5 @@
     template="{{ host }}/opensearchdescription.xml?token={{ token }}"
   />
 </OpenSearchDescription>
+
+<!-- vim: set filetype=xml sw=2 sts=2 : -->

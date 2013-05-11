@@ -30,7 +30,7 @@
   {{ input("Tags", bookmark.get_tag_string()) }}
   {{ linput("Suggestions URL", "suggestions_url", bookmark.get_suggestions_url() ) }}
 
-  <a class="left button" href="/search?query={{ back }}">Back</a>
+  <a class="left button" href="{{ back }}">Back</a>
   <a
     class="left button confirm"
     href="/delete?id={{ bookmark.id }}&back={{ back }}"
