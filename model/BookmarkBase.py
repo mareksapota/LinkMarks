@@ -23,6 +23,7 @@ class BookmarkBase(Base):
         primary_key = True
     )
 
+    fb_user_id = Column(Integer, nullable = False)
     name = Column(String, nullable = False)
     url = Column(String, nullable = False)
     keyword = Column(String)

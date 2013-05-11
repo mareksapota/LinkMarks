@@ -2,7 +2,6 @@ from model.Base import Base
 from model.BookmarkBase import BookmarkBase
 from model.Bookmark import Bookmark
 from model.KeywordBookmark import KeywordBookmark
-from model.Token import Token
 from model.SchemaVersion import SchemaVersion
 
 from sqlalchemy import create_engine

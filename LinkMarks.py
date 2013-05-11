@@ -11,6 +11,9 @@ from utils.Query import query_arg, valid_query_arg
 from utils.redirect import perform_redirect
 import model
 import templates as t
+import config
+
+import python_apis_maarons.FB.login as FBlogin
 
 # Stop if schema version doesn’t match supported version.
 model.SchemaVersion.check_version()
@@ -20,18 +23,17 @@ def safe_access(fn):
     @cherrypy.expose
     def wrapped(*args, **kwargs):
         try:
-            if "token" in kwargs:
-                token = kwargs.pop("token")
-            else:
-                token = cherrypy.request.cookie["token"].value
-            # Save the token so actions can use it.
-            cherrypy.request.token = token
-            model.Token.use(token)
+            FBlogin.cherrypy_authenticate(
+                config.fb_app_id,
+                config.fb_app_secret,
+            )
+        except FBlogin.LoginException:
+            return t.render("login")
         except:
-            return t.render("expired", token = None)
+            return t.render("accessdenied")
 
-        cherrypy.response.cookie["token"] = model.Token.issue()
-        cherrypy.response.cookie["token"]["path"] = "/"
+        if cherrypy.request.fb_user_id not in config.fb_allowed_user_ids:
+            return t.render("accessdenied")
 
         return fn(*args, **kwargs)
 
@@ -39,13 +41,8 @@ def safe_access(fn):
 
 class LinkMarks():
     @safe_access
-    def index(self):
-        return t.render("index")
-
-    @safe_access
-    @valid_query_arg("/")
-    def nosearch(self, query = None):
-        return t.render("nosearch", query = query);
+    def index(self, query = ""):
+        return t.render("index", query = query)
 
     @safe_access
     @valid_query_arg("/")
@@ -130,8 +127,12 @@ class LinkMarks():
 
     @safe_access
     def addengine(self):
-        host = cherrypy.request.base
-        return t.render("addengine", host = host)
+        return t.render("addengine")
+
+    @cherrypy.expose
+    def channel(self):
+        cherrypy.request.fb_user_id = None
+        return t.render("channel")
 
 cherrypy.config.update({
     "server.socket_port": 8080,

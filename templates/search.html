@@ -5,9 +5,7 @@
 
 {% block content %}
 <a class="right button" href="/">Back</a>
-<a class="right button" href="/nosearch?query={{ query }}">
-  I didn’t want to search
-</a>
+<a class="right button" href="/?query={{ query }}">Edit search</a>
 <h1>Search results</h1>
 {{ b.bookmarks(bookmarks, '/search?query=' + query.to_str()) }}
 {% endblock %}

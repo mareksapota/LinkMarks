@@ -5,7 +5,7 @@
 {% block content %}
 <h1>Search your bookmarks</h1>
 <form id="search-form" action="/search">
-  <input class="query" type="search" name="query"/>
+  <input class="query" type="search" name="query" value="{{ query }}"/>
   <a class="left button" href="/new">New</a>
   <input class="right button" type="submit" value="Search"/>
 </form>

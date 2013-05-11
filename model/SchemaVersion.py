@@ -12,7 +12,7 @@ class SchemaVersion(Base):
 
     version = Column(Integer, primary_key = True)
 
-    CURRENT_VERSION = 1
+    CURRENT_VERSION = 2
 
     @staticmethod
     def get_version():
@@ -43,6 +43,17 @@ class SchemaVersion(Base):
             session.execute("ALTER TABLE bookmarks ADD COLUMN suggestions_url VARCHAR")
             sv = SchemaVersion()
             sv.version = 1
+            session.add(sv)
+            session.commit()
+        if version < 2:
+            session = model.Session()
+            session.execute("DROP TABLE tokens")
+            session.execute("ALTER TABLE bookmarks ADD COLUMN fb_user_id "
+                            "INTEGER NOT NULL DEFAULT 0")
+            print("You have to run `UPDATE bookmarks SET fb_user_id = X` "
+                  "manually.")
+            sv = SchemaVersion()
+            sv.version = 2
             session.add(sv)
             session.commit()
 

@@ -1,4 +1,5 @@
 import json
+import cherrypy
 
 from model.BookmarkBase import BookmarkBase
 import model
@@ -8,8 +9,10 @@ class Bookmark(BookmarkBase):
     # Not private so it can be used in BookmarkBase.
     @staticmethod
     def all_query(session):
-        query = session.query(Bookmark).filter(Bookmark.keyword == None)
-        return query
+        return session.query(Bookmark).filter(
+            Bookmark.keyword == None,
+            Bookmark.fb_user_id == cherrypy.request.fb_user_id,
+        )
 
     @staticmethod
     @with_session()

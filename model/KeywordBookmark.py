@@ -3,6 +3,7 @@
 import urllib
 import urllib.parse
 import json
+import cherrypy
 
 from model.BookmarkBase import BookmarkBase
 import model
@@ -12,9 +13,10 @@ class KeywordBookmark(BookmarkBase):
     # Not private so it can be used in BookmarkBase.
     @staticmethod
     def all_query(session):
-        query = session.query(KeywordBookmark) \
-                .filter(KeywordBookmark.keyword != None)
-        return query
+        return session.query(KeywordBookmark).filter(
+            KeywordBookmark.keyword != None,
+            KeywordBookmark.fb_user_id == cherrypy.request.fb_user_id,
+        )
 
     @staticmethod
     @with_session()

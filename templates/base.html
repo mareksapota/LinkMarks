@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/style/base.css" type="text/css">
-    {% if token %}
-      <link
-        rel="search"
-        type="application/opensearchdescription+xml"
-        title="LinkMarks search"
-        href="/opensearchdescription.xml?token={{ token }}"
-      >
-    {% endif %}
+    <link
+      rel="search"
+      type="application/opensearchdescription+xml"
+      title="LinkMarks search"
+      href="/opensearchdescription.xml"
+    >
   </head>
   <body>
+    <div id="fb-root"></div>
+
     {% block content %}{% endblock %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="https://connect.facebook.net/en_GB/all.js"></script>
+    <script type="text/javascript">{% include "fbinit.js" %}</script>
     <script src="/static/script/base.js"></script>
     {% block script %}{% endblock %}
   </body>
 </html>
+
+<!-- vim: set filetype=jinja sw=2 sts=2 : -->
