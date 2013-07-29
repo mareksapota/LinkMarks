@@ -1,6 +1,7 @@
 from sqlalchemy import Sequence, Column
 from sqlalchemy import Integer, String
 from sqlalchemy import or_
+import cherrypy
 
 from model.Base import Base
 import model
@@ -112,6 +113,7 @@ class BookmarkBase(Base):
             bookmark = KeywordBookmark()
         else:
             bookmark = Bookmark()
+        bookmark.fb_user_id = cherrypy.request.fb_user_id
         BookmarkBase.__update(bookmark, name, url, keyword, tags,
                               suggestions_url)
         session.add(bookmark)
