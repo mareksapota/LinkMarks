@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="/static/style/base.css" type="text/css">
     <link
@@ -16,10 +17,10 @@
 
     {% block content %}{% endblock %}
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    {% include "PressUI/_jquery.html" %}
     <script src="https://connect.facebook.net/en_GB/all.js"></script>
     <script type="text/javascript">{% include "fbinit.js" %}</script>
-    <script src="/static/script/base.js"></script>
+    <script src="/static/script/PressUI/confirm.js"></script>
     {% block script %}{% endblock %}
   </body>
 </html>

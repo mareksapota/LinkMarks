@@ -147,9 +147,9 @@ if len(sys.argv) > 1 and sys.argv[1] == "production":
     PIDFile(cherrypy.engine, "/tmp/linkmarks.pid").subscribe()
 
 conf = {}
-for d in ["static/style", "static/script"]:
+for (d, _, names) in os.walk("static", followlinks = True):
     p = os.path.abspath(d)
-    for f in os.listdir(d):
+    for f in names:
         conf["/{0}/{1}".format(d, f)] = {
             "tools.staticfile.on": True,
             "tools.staticfile.filename": "{0}/{1}".format(p, f),

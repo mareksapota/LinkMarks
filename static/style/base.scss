@@ -1,50 +1,14 @@
+@import "PressUI/style/layout";
+@import "PressUI/style/button";
+@import "PressUI/style/form";
+@import "PressUI/style/box";
+
 .button {
-  $button-bg: darken(#4c66a4, 6%);
-  $button-fg: white;
-
-  padding: 0.5em;
-  border-radius: 0.5em;
-  border: 1px solid $button-bg;
-  background: -moz-linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
-  background: -webkit-linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
-  background: -o-linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
-  background: linear-gradient(top, lighten($button-bg, 6%) 0%, lighten($button-bg, 3%) 3%, darken($button-bg, 3%) 97%, darken($button-bg, 6%) 100%);
-  text-decoration: none;
-  font-size: 0.8em;
-  color: $button-fg;
-  font-weight: bold;
+  @include press-button($blue, white);
 }
 
-.right.button + .right.button {
-  margin-right: 0.5em;
-}
-
-.left.button + .left.button {
-  margin-left: 0.5em;
-}
-
-.left {
-  float: left;
-}
-
-.right {
-  float: right;
-}
-
-.clear {
-  clear: both;
-}
-
-@mixin border-box {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -o-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
-body {
-  width: 50em;
-  margin: 1em auto;
+input[type=search], input[type=text] {
+  @include press-input-text($gray1);
 }
 
 #search-form .query {
@@ -52,28 +16,11 @@ body {
 }
 
 #new-form, #edit-form {
-  label {
-    width: 10em;
-    display: inline-block;
-    float: left;
-  }
-
-  .entry {
-    width: 40em;
-  }
-}
-
-#bookmarks {
-  padding: 0;
-  margin: 1em 0;
+  @include press-form(10em, 40em);
 }
 
 .bookmark {
-  list-style: none;
-  padding: 0.5em 2em;
-  margin-bottom: 0.5em;
-  border: 0.1em solid black;
-  border-radius: 0.5em;
+  @include press-box($gray3, $gray2);
 
   .name {
     font-size: 1.5em;
