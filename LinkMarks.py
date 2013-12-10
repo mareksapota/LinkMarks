@@ -4,6 +4,7 @@
 import cherrypy
 from cherrypy.process.plugins import PIDFile
 import os
+import os.path
 import sys
 import json
 
@@ -128,6 +129,22 @@ class LinkMarks():
     @safe_access
     def addengine(self):
         return t.render("addengine")
+
+    @safe_access
+    def version(self):
+        f = os.path.abspath(__file__)
+        d = os.path.dirname(f)
+        linkmarks_version = "unknown"
+        with open(d + "/.git/refs/heads/master") as f:
+            linkmarks_version = f.read()
+        pressui_version = "unknown"
+        with open(d + "/PressUI/.git/refs/heads/master") as f:
+            pressui_version = f.read()
+        return t.render(
+            "version",
+            linkmarks_version = linkmarks_version,
+            pressui_version = pressui_version,
+        )
 
     @cherrypy.expose
     def channel(self):
