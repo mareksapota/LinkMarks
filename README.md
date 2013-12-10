@@ -4,6 +4,8 @@ LinkMarks is a bookmarking service that was created in an attempt to allow easy
 sharing of bookmarks between multiple browsers or computers.
 
 # How to use it?
+Copy `config.template.py` to `config.py` and fill it in.
+
 `./LinkMarks.py` will launch LinkMarks in development mode, for production use
 `./LinkMarks.py production`.
 
@@ -18,3 +20,4 @@ one matching result you will be automatically redirected to that page.
 - SQLAlchemy
 - Jinja2
 - SASS
+- [python_apis_maarons](https://github.com/maarons/python_apis_maarons)
