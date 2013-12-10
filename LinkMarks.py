@@ -132,7 +132,7 @@ class LinkMarks():
     @cherrypy.expose
     def channel(self):
         cherrypy.request.fb_user_id = None
-        return t.render("channel")
+        return t.render("PressUI/facebook_channel")
 
 cherrypy.config.update({
     "server.socket_port": 8080,
