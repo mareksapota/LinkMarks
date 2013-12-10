@@ -1,4 +1,4 @@
-SCSS=$(shell find . -type f -name \*.scss)
+SCSS=$(shell find -L . -type f -name \*.scss)
 
 static/style/base.css: $(SCSS)
 	sass static/style/base.scss static/style/base.css
