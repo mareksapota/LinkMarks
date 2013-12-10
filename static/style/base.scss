@@ -28,16 +28,17 @@ input[type=search], input[type=text] {
 
   .url, .tags {
     font-size: 0.9em;
-    a {
-      text-decoration: none;
-      color: black;
-    }
+  }
+
+  .url a {
+    text-decoration: none;
+    color: blue;
   }
 
   .keyword {
     font-size: 0.7em;
     .blue {
-        color: blue;
+        color: green;
     }
     .small {
       font-size: 0.5em;
