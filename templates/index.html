@@ -3,7 +3,10 @@
 {% block press_title %}Search your bookmarks{% endblock %}
 
 {% block press_content %}
-<h1>Search your bookmarks</h1>
+<h1>
+  Search your bookmarks
+  <a href="/addengine" class="press-right button">Add search engine</a>
+</h1>
 <form id="search-form" action="/search">
   <input class="query" type="search" name="query" value="{{ query }}"/>
   <a class="press-left button" href="/new">New</a>
@@ -11,3 +14,5 @@
 </form>
 <a href="/all" class="press-left button press-clear">Show all bookmarks</a>
 {% endblock %}
+
+<!-- vim: set filetype=jinja sw=2 sts=2 : -->
