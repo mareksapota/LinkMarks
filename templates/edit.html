@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Edit bookmark{% endblock %}
+{% block press_title %}Edit bookmark{% endblock %}
 
 {% macro linput(label, name, value) %}
 <div>
@@ -18,7 +18,7 @@
 {{ linput(label, label|lower, value) }}
 {% endmacro %}
 
-{% block content %}
+{% block press_content %}
 <h1>Edit bookmark</h1>
 <form id="edit-form" action="/save" method="post">
   <input type="hidden" name="id" value="{{ bookmark.id }}"/>

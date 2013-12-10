@@ -1,27 +1,24 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, height=device-height">
-    <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="/static/style/base.css" type="text/css">
-    <link
-      rel="search"
-      type="application/opensearchdescription+xml"
-      title="LinkMarks search"
-      href="/opensearchdescription.xml"
-    >
-  </head>
-  <body>
-    <div id="fb-root"></div>
+{% extends "PressUI/base.html" %}
+{% import "PressUI/helpers.html" as h %}
 
-    {% block content %}{% endblock %}
+{% block press_style %}
+  {{ h.press_stylesheet('/static/style/base.css') }}
+{% endblock %}
 
-    {% include "PressUI/jquery.html" %}
-    <script src="/static/script/PressUI/confirm.js"></script>
-    {% include "PressUI/facebook.html" %}
-    {% block script %}{% endblock %}
-  </body>
-</html>
+{% block press_header %}
+  <link
+    rel="search"
+    type="application/opensearchdescription+xml"
+    title="LinkMarks search"
+    href="/opensearchdescription.xml"
+  >
+{% endblock %}
+
+{% block press_script %}
+  {% include "PressUI/jquery.html" %}
+  <script src="/static/script/PressUI/confirm.js"></script>
+  {% include "PressUI/facebook.html" %}
+  {% block script %}{% endblock %}
+{% endblock %}
 
 <!-- vim: set filetype=jinja sw=2 sts=2 : -->

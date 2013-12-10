@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% import "_bookmark.html" as b %}
 
-{% block title %}All bookmarks{% endblock %}
+{% block press_title %}All bookmarks{% endblock %}
 
-{% block content %}
+{% block press_content %}
 <a class="press-right button" href="/">Back</a>
 <h1>All bookmarks</h1>
 {{ b.bookmarks(bookmarks, '/all') }}
