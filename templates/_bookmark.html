@@ -18,7 +18,9 @@
   <div class="url">
     <a href="{{ b.get_url() }}">{{ b.url }}</a>
   </div>
-  <div class="tags">Tags: {{ b.get_tag_string() }}</div>
+  {% if b.has_tags() %}
+    <div class="tags">Tags: {{ b.get_tag_string() }}</div>
+  {% endif %}
 </div>
 {% endmacro %}
 

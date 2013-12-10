@@ -7,14 +7,6 @@ from model.Base import Base
 import model
 from utils.session import with_session
 
-# Convert tags string to internal representation.
-def tags_to_intern(tags):
-    return ",".join(map(lambda t: t.strip(), tags.split(",")))
-
-# Inverse of the previous method.
-def intern_to_tags(tags):
-    return tags.replace(",", ", ")
-
 class BookmarkBase(Base):
     __tablename__ = "bookmarks"
 
@@ -33,7 +25,10 @@ class BookmarkBase(Base):
     tags = Column(String, nullable = False)
 
     def get_tag_string(self):
-        return intern_to_tags(self.tags)
+        return self.tags.replace(",", ", ")
+
+    def has_tags(self):
+        return self.tags.strip() != ""
 
     def get_keyword(self):
         return self.keyword if self.keyword else ""
@@ -137,4 +132,4 @@ class BookmarkBase(Base):
             bookmark.suggestions_url = suggestions_url
         else:
             bookmark.suggestions_url = None
-        bookmark.tags = tags_to_intern(tags)
+        bookmark.tags = ",".join(map(lambda t: t.strip(), tags.split(",")))
