@@ -1,15 +1,10 @@
-SCSS=$(shell find -L . -type f -name \*.scss)
+include PressUI/utils/scss.mk
 
-static/style/base.css: $(SCSS)
-	sass static/style/base.scss static/style/base.css
+static/style/base.css: $(PRESS_SCSS)
 
-.PHONY: pressui
-pressui:
-	git clone https://github.com/maarons/pressui.git PressUI
+include PressUI/utils/scss_clean.mk
+include PressUI/utils/python_clean.mk
+include PressUI/utils/pressui.mk
 
 .PHONY: clean
-clean:
-	-rm -rf $(shell find . -type d -name __pycache__)
-	-rm -f $(shell find . -type f -name \*.css)
-	-rm -rf .sass-cache
-	-rm -rf PressUI
+clean: press_clean_css press_clean_python press_clean
