@@ -8,7 +8,13 @@
   <a href="/addengine" class="press-right button">Add search engine</a>
 </h1>
 <form id="search-form" action="/search">
-  <input class="query" type="search" name="query" value="{{ query }}"/>
+  <input
+    class="query"
+    type="search"
+    name="query"
+    value="{{ query }}"
+    autofocus
+  />
   <a class="press-left button" href="/new">New</a>
   <input class="press-right button" type="submit" value="Search"/>
 </form>
