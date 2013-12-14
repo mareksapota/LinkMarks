@@ -154,7 +154,7 @@ class ParseQuery(ParseBase):
         return query
 
 class ParseObj(ParseBase):
-    def __init__(self, properties, args):
+    def __init__(self, properties, values):
         self.__cls = self.__class__
         self.__cls_name = self.__cls.__name__
         for prop in properties:
@@ -165,8 +165,14 @@ class ParseObj(ParseBase):
                         prop,
                     )
                 )
-        for arg in args:
-            setattr(self, arg, args[arg])
+        for prop in values:
+            if prop in properties:
+                # Parse stores both int and float as number type, converting
+                # here prevents type errors when save() is called.
+                t = properties[prop]["type"]
+                setattr(self, prop, t(values[prop]))
+            else:
+                setattr(self, prop, values[prop])
         self.__properties = properties
         self.__base_url = self.api_url + self.__cls_name
 
