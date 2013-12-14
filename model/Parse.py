@@ -166,7 +166,7 @@ class ParseObj(ParseBase):
                     )
                 )
         for prop in values:
-            if prop in properties:
+            if prop in properties and values[prop] is not None:
                 # Parse stores both int and float as number type, converting
                 # here prevents type errors when save() is called.
                 t = properties[prop]["type"]
