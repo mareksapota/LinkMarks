@@ -2,7 +2,7 @@
 <div class="bookmark">
   <a
     class="press-right button"
-    href="/edit?id={{ b.id }}&back={{ back }}"
+    href="/edit?objectId={{ b.objectId }}&back={{ back }}"
   >Edit</a>
   <div class="name">
     {{ b.name }}
@@ -16,11 +16,11 @@
     {% endif %}
   </div>
   <div class="url">
-    <a href="{{ b.get_url() }}">{{ b.url }}</a>
+    <a href="{{ b.str_url() }}">{{ b.url }}</a>
   </div>
   <div class="tags">
     {% if b.has_tags() %}
-      Tags: {{ b.get_tag_string() }}
+      Tags: {{ b.str_tags() }}
     {% else %}
       No tags
     {% endif %}

@@ -10,14 +10,14 @@ import json
 
 from utils.Query import query_arg, valid_query_arg
 from utils.redirect import perform_redirect
-import model
+from model.Bookmark import Bookmark
+import model.Parse
 import templates as t
 import config
 
 import python_apis_maarons.FB.login as FBlogin
 
-# Stop if schema version doesn’t match supported version.
-model.SchemaVersion.check_version()
+model.Parse.init(config.parse_app_id, config.parse_rest_key)
 
 def safe_access(fn):
 
@@ -48,13 +48,16 @@ class LinkMarks():
     @safe_access
     @valid_query_arg("/")
     def search(self, query = None, redirect = None):
-        key_bookmark = model.KeywordBookmark.find(query.keyword())
+        key_bookmark_p = Bookmark.gen_find_keyword(query.keyword())
+        bookmarks_p = Bookmark.gen_find_all(query)
+
+        key_bookmark = key_bookmark_p.prep()
         if key_bookmark is not None:
             return perform_redirect(key_bookmark.search(query.body()))
 
-        bookmarks = model.BookmarkBase.find_all(query)
+        bookmarks = bookmarks_p.prep()
         if redirect == "yes" and len(bookmarks) == 1:
-            return perform_redirect(bookmarks[0].get_url())
+            return perform_redirect(bookmarks[0].str_url())
         return t.render(
             "search",
             bookmarks = bookmarks,
@@ -63,7 +66,7 @@ class LinkMarks():
 
     @safe_access
     def all(self):
-        bookmarks = model.BookmarkBase.all()
+        bookmarks = Bookmark.all()
         return t.render(
             "all",
             bookmarks = bookmarks,
@@ -74,25 +77,30 @@ class LinkMarks():
         return t.render("new")
 
     @safe_access
-    def save(self,name, url, keyword, tags, suggestions_url, id = None, back = None):
-        if id is None:
-            model.BookmarkBase.new(name, url, keyword, tags, suggestions_url)
-        else:
-            bookmark = model.BookmarkBase.get(id)
-            bookmark.update(name, url, keyword, tags, suggestions_url)
+    def save(self, name, url, keyword, tags, suggestions_url, objectId = None, back = None):
+        bookmark = Bookmark()
+        if objectId is not None:
+            bookmark = Bookmark.get_safe(objectId)
+        bookmark.name = name if name.strip() else None
+        bookmark.url = url if url.strip() else None
+        bookmark.keyword = keyword if keyword.strip() else None
+        bookmark.suggestions_url = suggestions_url if suggestions_url.strip() else None
+        bookmark.tags = tags.strip()
+        bookmark.save()
         if back is None:
             return perform_redirect("/")
         else:
             return perform_redirect(back)
 
     @safe_access
-    def edit(self, id, back):
-        bookmark = model.BookmarkBase.get(id)
+    def edit(self, objectId, back):
+        bookmark = Bookmark.get_safe(objectId)
         return t.render("edit", bookmark = bookmark, back = back)
 
     @safe_access
-    def delete(self, id, back = None):
-        model.Bookmark.delete(id)
+    def delete(self, objectId, back = None):
+        bookmark = Bookmark.get_safe(objectId)
+        bookmark.destroy()
         if back is None:
             return perform_redirect("/")
         else:
@@ -110,18 +118,20 @@ class LinkMarks():
     @query_arg
     def suggestion(self, count, query = None):
         try:
+            limit = int(count)
             if query is None or not query.is_valid():
                 raise Exception("Invalid query")
             user_agent = cherrypy.request.headers["User-Agent"]
-            key_bookmark = model.KeywordBookmark.find(query.keyword())
+            key_bookmark_p = Bookmark.gen_find_keyword(query.keyword())
+            bookmarks_p = Bookmark.gen_find_all(query, limit = limit)
+            key_bookmark = key_bookmark_p.prep()
             if key_bookmark is not None:
-                results = key_bookmark.get_suggestions(query, user_agent)
+                results = key_bookmark.get_suggestions(query, user_agent, limit)
                 if results is not None:
                     return json.dumps(results)
-            bookmarks = model.BookmarkBase.find_all(query, int(count))
             return json.dumps([
                 str(query.url_unsafe()),
-                [b.name for b in bookmarks],
+                [b.name for b in bookmarks_p.prep()],
             ])
         except:
             return json.dumps([str(query.url_unsafe()), []])

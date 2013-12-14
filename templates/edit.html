@@ -21,19 +21,19 @@
 {% block press_content %}
 <h1>Edit bookmark</h1>
 <form id="edit-form" action="/save" method="post">
-  <input type="hidden" name="id" value="{{ bookmark.id }}"/>
+  <input type="hidden" name="objectId" value="{{ bookmark.objectId }}"/>
   <input type="hidden" name="back" value="{{ back }}"/>
 
   {{ input("Name", bookmark.name) }}
   {{ input("URL", bookmark.url) }}
-  {{ input("Keyword", bookmark.get_keyword()) }}
-  {{ input("Tags", bookmark.get_tag_string()) }}
-  {{ linput("Suggestions URL", "suggestions_url", bookmark.get_suggestions_url() ) }}
+  {{ input("Keyword", bookmark.str_keyword()) }}
+  {{ input("Tags", bookmark.str_tags()) }}
+  {{ linput("Suggestions URL", "suggestions_url", bookmark.str_suggestions_url() ) }}
 
   <a class="press-left button" href="{{ back }}">Back</a>
   <a
     class="press-left button confirm"
-    href="/delete?id={{ bookmark.id }}&back={{ back }}"
+    href="/delete?objectId={{ bookmark.objectId }}&back={{ back }}"
   >Delete</a>
   <input class="press-right button" type="submit" value="Update"/>
 </form>
