@@ -41,10 +41,12 @@ def safe_access(fn):
     return wrapped
 
 class LinkMarks():
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def index(self, query = ""):
         return t.render("index", query = query)
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     @valid_query_arg("/")
     def search(self, query = None, redirect = None):
@@ -64,6 +66,7 @@ class LinkMarks():
             query = query,
         )
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def all(self):
         bookmarks = Bookmark.all()
@@ -72,10 +75,12 @@ class LinkMarks():
             bookmarks = bookmarks,
         )
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def new(self):
         return t.render("new")
 
+    @cherrypy.tools.allow(methods = ["POST"])
     @safe_access
     def save(self, name, url, keyword, tags, suggestions_url, objectId = None, back = None):
         bookmark = Bookmark()
@@ -92,11 +97,13 @@ class LinkMarks():
         else:
             return perform_redirect(back)
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def edit(self, objectId, back):
         bookmark = Bookmark.get_safe(objectId)
         return t.render("edit", bookmark = bookmark, back = back)
 
+    @cherrypy.tools.allow(methods = ["POST"])
     @safe_access
     def delete(self, objectId, back = None):
         bookmark = Bookmark.get_safe(objectId)
@@ -107,6 +114,7 @@ class LinkMarks():
             return perform_redirect(back)
 
     # OpenSearch
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def opensearchdescription_xml(self):
         cherrypy.response.headers['Content-Type'] = \
@@ -114,6 +122,7 @@ class LinkMarks():
         host = cherrypy.request.base
         return t.render_template("opensearchdescription.xml", host = host)
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     @query_arg
     def suggestion(self, count, query = None):
@@ -136,10 +145,12 @@ class LinkMarks():
         except:
             return json.dumps([str(query.url_unsafe()), []])
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def addengine(self):
         return t.render("addengine")
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def version(self):
         f = os.path.abspath(__file__)
@@ -156,6 +167,7 @@ class LinkMarks():
             pressui_version = pressui_version,
         )
 
+    @cherrypy.tools.allow(methods = ["GET"])
     @cherrypy.expose
     def channel(self):
         cherrypy.request.fb_user_id = None

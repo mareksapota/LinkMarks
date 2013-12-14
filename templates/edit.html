@@ -19,6 +19,11 @@
 {% endmacro %}
 
 {% block press_content %}
+<form action="/delete" method="post">
+  <input type="hidden" name="objectId" value="{{ bookmark.objectId }}"/>
+  <input type="hidden" name="back" value="{{ back }}"/>
+  <input class="press-right button confirm" type="submit" value="Delete"/>
+</form>
 <h1>Edit bookmark</h1>
 <form id="edit-form" action="/save" method="post">
   <input type="hidden" name="objectId" value="{{ bookmark.objectId }}"/>
@@ -31,10 +36,6 @@
   {{ linput("Suggestions URL", "suggestions_url", bookmark.str_suggestions_url() ) }}
 
   <a class="press-left button" href="{{ back }}">Back</a>
-  <a
-    class="press-left button confirm"
-    href="/delete?objectId={{ bookmark.objectId }}&back={{ back }}"
-  >Delete</a>
   <input class="press-right button" type="submit" value="Update"/>
 </form>
 {% endblock %}
