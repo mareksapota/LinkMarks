@@ -100,9 +100,9 @@ class Bookmark(ParseObj):
         url_query = Bookmark.query_safe().matches("url", query)
         tag_query = Bookmark.query_safe().matches("tags", query)
         query = ParseQuery.or_(name_query, url_query, tag_query)
-        return Bookmark.__sort_results(
-            query.ascending("name").limit(limit).gen_find()
-        )
+        def fun(bookmarks):
+            return Bookmark.__sort_results(bookmarks)
+        return query.ascending("name").limit(limit).gen_find().then(fun)
 
     @staticmethod
     def gen_find_keyword(keyword):
