@@ -181,6 +181,7 @@ class ParseObj(ParseBase):
         return ParseQuery(cls)
 
     def save(self):
+        self.before_save()
         data = {}
         for prop in self.__properties:
             val = getattr(self, prop, None)
@@ -210,6 +211,7 @@ class ParseObj(ParseBase):
             self.objectId = json.loads(ret)["objectId"]
 
     def destroy(self):
+        self.before_destroy()
         if not hasattr(self, "objectId"):
             raise Exception("Can not destroy object that has not been saved")
         self.make_request(
@@ -225,3 +227,10 @@ class ParseObj(ParseBase):
         ret = ParseObj.make_request(url, "get")
         data = json.loads(ret)
         return cls(**data)
+
+    # override in actual class
+    def before_save(self):
+        pass
+
+    def before_destroy(self):
+        pass

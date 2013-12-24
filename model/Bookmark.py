@@ -118,3 +118,15 @@ class Bookmark(ParseObj):
         return Bookmark.__sort_results(
             Bookmark.query_safe().ascending("name").find()
         )
+
+    def before_save(self):
+        self.force_post()
+
+    def before_destroy(self):
+        self.force_post()
+
+    def force_post(self):
+        if cherrypy.request.method != "POST":
+            raise Exception("Modifying objects on {} request".format(
+                cherrypy.request.method
+            ))
