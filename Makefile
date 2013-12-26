@@ -1,6 +1,6 @@
 include PressUI/utils/scss.mk
 
-static/style/base.css: $(PRESS_SCSS)
+static/style/all.css: $(PRESS_SCSS)
 
 include PressUI/utils/scss_clean.mk
 include PressUI/utils/python_clean.mk

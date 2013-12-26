@@ -190,9 +190,9 @@ if len(sys.argv) > 1 and sys.argv[1] == "production":
     press_set_production(True)
 
 conf = {
-    "/static/style/base.css": {
+    "/static/style/all.css": {
         "tools.staticfile.on": True,
-        "tools.staticfile.filename": os.path.abspath("static/style/base.css"),
+        "tools.staticfile.filename": os.path.abspath("static/style/all.css"),
         "tools.staticfile.content_types": {
             "css": "text/css",
         }
