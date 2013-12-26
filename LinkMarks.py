@@ -4,7 +4,7 @@
 import cherrypy
 from cherrypy.process.plugins import PIDFile
 import os
-import os.path
+from os.path import abspath, dirname
 import sys
 import json
 
@@ -13,7 +13,9 @@ from utils.redirect import perform_redirect
 from model.Bookmark import Bookmark
 import model.Parse
 import templates as t
-from PressUI.utils.template_utils import press_all_js, press_set_production
+from PressUI.cherrypy.common import press_set_production
+from PressUI.cherrypy.javascript import press_all_js
+from PressUI.cherrypy.stylesheet import press_all_css
 import config
 
 import python_apis_maarons.FB.login as FBlogin
@@ -154,8 +156,8 @@ class LinkMarks():
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def version(self):
-        f = os.path.abspath(__file__)
-        d = os.path.dirname(f)
+        f = abspath(__file__)
+        d = dirname(f)
         linkmarks_version = "unknown"
         with open(d + "/.git/refs/heads/master") as f:
             linkmarks_version = f.read()
@@ -175,6 +177,7 @@ class LinkMarks():
         return t.render("PressUI/facebook_channel")
 
     all_js = press_all_js
+    all_css = press_all_css
 
 cherrypy.config.update({
     "server.socket_port": 8080,
@@ -189,14 +192,4 @@ if len(sys.argv) > 1 and sys.argv[1] == "production":
     PIDFile(cherrypy.engine, "/tmp/linkmarks.pid").subscribe()
     press_set_production(True)
 
-conf = {
-    "/static/style/all.css": {
-        "tools.staticfile.on": True,
-        "tools.staticfile.filename": os.path.abspath("static/style/all.css"),
-        "tools.staticfile.content_types": {
-            "css": "text/css",
-        }
-    },
-}
-
-cherrypy.quickstart(LinkMarks(), config = conf)
+cherrypy.quickstart(LinkMarks())
