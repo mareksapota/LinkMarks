@@ -13,6 +13,7 @@ from utils.redirect import perform_redirect
 from model.Bookmark import Bookmark
 import model.Parse
 import templates as t
+from PressUI.utils.template_utils import press_all_js, press_set_production
 import config
 
 import python_apis_maarons.FB.login as FBlogin
@@ -173,6 +174,8 @@ class LinkMarks():
         cherrypy.request.fb_user_id = None
         return t.render("PressUI/facebook_channel")
 
+    all_js = press_all_js
+
 cherrypy.config.update({
     "server.socket_port": 8080,
     "tools.gzip.on": True,
@@ -184,18 +187,16 @@ if len(sys.argv) > 1 and sys.argv[1] == "production":
         "tools.proxy.on": True
     })
     PIDFile(cherrypy.engine, "/tmp/linkmarks.pid").subscribe()
+    press_set_production(True)
 
-conf = {}
-for (d, _, names) in os.walk("static", followlinks = True):
-    p = os.path.abspath(d)
-    for f in names:
-        conf["/{0}/{1}".format(d, f)] = {
-            "tools.staticfile.on": True,
-            "tools.staticfile.filename": "{0}/{1}".format(p, f),
-            "tools.staticfile.content_types": {
-                "css": "text/css",
-                "js": "application/javascript"
-            }
+conf = {
+    "/static/style/base.css": {
+        "tools.staticfile.on": True,
+        "tools.staticfile.filename": os.path.abspath("static/style/base.css"),
+        "tools.staticfile.content_types": {
+            "css": "text/css",
         }
+    },
+}
 
 cherrypy.quickstart(LinkMarks(), config = conf)

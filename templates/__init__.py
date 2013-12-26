@@ -1,7 +1,7 @@
 import cherrypy
-from jinja2 import Environment, FileSystemLoader
-env = Environment(loader = FileSystemLoader("templates"))
-env.autoescape = True
+from jinja2 import FileSystemLoader
+from PressUI.utils.template_utils import press_get_env
+env = press_get_env(FileSystemLoader("templates"))
 
 import config
 

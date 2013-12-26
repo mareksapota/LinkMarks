@@ -16,10 +16,10 @@
 
 {% block press_script %}
   {% include "PressUI/jquery.html" %}
-  <script src="/static/script/PressUI/confirm.js"></script>
-  <script src="/static/script/PressUI/helpers.js"></script>
   {% include "PressUI/facebook.html" %}
-  <script src="/static/script/bookmark_prefetch.js"></script>
+  {{ press_javascript("static/script/PressUI/confirm.js") }}
+  {{ press_javascript("static/script/PressUI/helpers.js") }}
+  {{ press_javascript("static/script/bookmark_prefetch.js") }}
 {% endblock %}
 
 <!-- vim: set filetype=jinja sw=2 sts=2 : -->
