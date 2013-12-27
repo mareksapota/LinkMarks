@@ -18,14 +18,21 @@ class ParsePromise(threading.Thread):
         self.__args = args
         self.__kwargs = kwargs
         self.__ret = None
+        self.__exception = None
         self.start()
 
     def run(self):
-        self.__ret = self.__fun(*self.__args, **self.__kwargs)
+        try:
+            self.__ret = self.__fun(*self.__args, **self.__kwargs)
+        except Exception as e:
+            self.__exception = e
 
     def prep(self):
         self.join()
-        return self.__ret
+        if self.__exception is not None:
+            raise self.__exception
+        else:
+            return self.__ret
 
     def then(self, fun):
         return ParsePromise(lambda: fun(self.prep()))
