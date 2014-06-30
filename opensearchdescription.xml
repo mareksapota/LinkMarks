@@ -7,19 +7,19 @@
 
   <Url
     type="text/html"
-    template="{{ host }}/search?redirect=yes&amp;query={searchTerms}"
+    template="{host}/search?redirect=yes&amp;query={{searchTerms}}"
   />
 
   <Url
     type="application/x-suggestions+json"
     rel="suggestions"
-    template="{{ host }}/suggestion?query={searchTerms}&amp;count={count}"
+    template="{host}/suggestion?query={{searchTerms}}&amp;count={{count}}"
   />
 
   <Url
     type="application/opensearchdescription+xml"
     rel="self"
-    template="{{ host }}/opensearchdescription.xml"
+    template="{host}/opensearchdescription.xml"
   />
 </OpenSearchDescription>
 

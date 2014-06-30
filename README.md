@@ -6,18 +6,14 @@ sharing of bookmarks between multiple browsers or computers.
 # How to use it?
 Copy `config.template.py` to `config.py` and fill it in.
 
-`./LinkMarks.py` will launch LinkMarks in development mode, for production use
-`./LinkMarks.py production`.
+    ./LinkMarks.py config.py
 
 ## Automatic redirects
 If you pass `?redirect=yes` as a parameter to LinkMarks search and there is only
 one matching result you will be automatically redirected to that page.
 
 # Dependencies
-- Python 3.x — LinkMarks will not work with Python 2, this was a concious choice
-  made to allow easier development.
+- Python 3.x — LinkMarks will not work with Python 2.
 - CherryPy
-- SQLAlchemy
-- Jinja2
 - SASS
 - [python_apis_maarons](https://github.com/maarons/python_apis_maarons)

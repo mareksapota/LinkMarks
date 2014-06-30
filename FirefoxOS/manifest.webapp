@@ -1,0 +1,11 @@
+{
+  "name": "LinkMarks",
+  "description": "LinkMarks",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/icon.png"
+  },
+  "developer": {
+    "name": "Marek Sapota"
+  }
+}

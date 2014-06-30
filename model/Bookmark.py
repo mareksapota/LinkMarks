@@ -6,78 +6,53 @@ from model.Parse import ParseObj, ParseQuery
 
 class Bookmark(ParseObj):
     def __init__(self, **kwargs):
-        if "fb_user_id" not in kwargs:
-            kwargs["fb_user_id"] = cherrypy.request.fb_user_id
+        if 'fb_user_id' not in kwargs:
+            kwargs['fb_user_id'] = cherrypy.request.fb_user_id
 
         ParseObj.__init__(
             self,
             {
-                "fb_user_id": {"type": int},
-                "name": {"type": str},
-                "url": {"type": str},
-                "keyword": {"type": str, "nullable": True},
-                "suggestions_url": {"type": str, "nullable": True},
-                "tags": {"type": str},
+                'fb_user_id': {'type': int},
+                'name': {'type': str},
+                'url': {'type': str},
+                'keyword': {'type': str, 'nullable': True},
+                'suggestions_url': {'type': str, 'nullable': True},
+                'tags': {'type': str},
             },
             kwargs,
         )
 
-    def str_tags(self):
-        tags = self.tags.split(",")
-        return ", ".join([t.strip() for t in tags])
-
-    def has_tags(self):
-        return self.tags.strip() != ""
-
-    def str_keyword(self):
-        return self.keyword if self.keyword else ""
-
-    def str_suggestions_url(self):
-        return self.suggestions_url if self.suggestions_url else ""
-
-    def str_url(self):
-        # Replace the search param with an empty string
-        if self.keyword is not None:
-            return self.url.replace("%s", "")
-        return self.url
-
-    def search(self, query_body):
-        if self.keyword is None:
-            raise Exception("This bookmark does not have a keyword")
-        return self.url.replace("%s", query_body)
-
     def get_suggestions(self, query, user_agent, limit):
-        if query.keyword() != self.keyword:
-             return None
-        term = query.body()
         # Don’t forward trivial queries.
-        if self.suggestions_url is None or len(term) == 0:
+        if self.suggestions_url is None or len(query.strip()) == 0:
             return None
-        url = self.suggestions_url.replace("%s", term)
+        url = self.suggestions_url.replace('%s', query)
         req = urllib.request.Request(
             url,
-            headers = { "User-Agent": user_agent },
+            headers = { 'User-Agent': user_agent },
         )
-        ret = urllib.request.urlopen(req)
-        results = ret.read()
+        timeout = 15
+        ret = urllib.request.urlopen(req, timeout = timeout)
+        results = json.loads(ret.read().decode('utf-8'))
         ret.close()
-        results = json.loads(results.decode("UTF-8"))[1][:limit]
-        return [
-            str(query.url_unsafe()),
-            ["{0} {1}".format(self.keyword, s) for s in results],
-        ]
+        return results[1][:limit]
+
+    def search(self, query):
+        if self.keyword is None:
+            raise Exception('This bookmark does not have a keyword')
+        return self.url.replace('%s', query)
 
     @staticmethod
     def get_safe(objectId):
         bookmark = Bookmark.get(objectId)
         if bookmark.fb_user_id != cherrypy.request.fb_user_id:
-            raise Exception("Unauthorised access")
+            raise Exception('Unauthorised access')
         return bookmark
 
     @staticmethod
     def query_safe():
         return Bookmark.query().equal_to(
-            "fb_user_id",
+            'fb_user_id',
             cherrypy.request.fb_user_id,
         )
 
@@ -95,18 +70,21 @@ class Bookmark(ParseObj):
 
     @staticmethod
     def gen_find_all(query, limit = None):
-        query = str(query.url_unsafe())
-        name_query = Bookmark.query_safe().matches("name", query)
-        url_query = Bookmark.query_safe().matches("url", query)
-        tag_query = Bookmark.query_safe().matches("tags", query)
+        name_query = Bookmark.query_safe().matches(
+            'name',
+            query,
+            case_insensitive = True,
+        )
+        url_query = Bookmark.query_safe().matches('url', query)
+        tag_query = Bookmark.query_safe().matches('tags', query)
         query = ParseQuery.or_(name_query, url_query, tag_query)
         def fun(bookmarks):
             return Bookmark.__sort_results(bookmarks)
-        return query.ascending("name").limit(limit).gen_find().then(fun)
+        return query.ascending('name').limit(limit).gen_find().then(fun)
 
     @staticmethod
     def gen_find_keyword(keyword):
-        p = Bookmark.query_safe().equal_to("keyword", keyword).gen_find()
+        p = Bookmark.query_safe().equal_to('keyword', keyword).gen_find()
         def fun(bookmarks):
             if len(bookmarks) == 1:
                 return bookmarks[0]
@@ -116,7 +94,7 @@ class Bookmark(ParseObj):
     @staticmethod
     def all():
         return Bookmark.__sort_results(
-            Bookmark.query_safe().ascending("name").find()
+            Bookmark.query_safe().ascending('name').find()
         )
 
     def before_save(self):
@@ -126,7 +104,7 @@ class Bookmark(ParseObj):
         self.force_post()
 
     def force_post(self):
-        if cherrypy.request.method != "POST":
-            raise Exception("Modifying objects on {} request".format(
+        if cherrypy.request.method != 'POST':
+            raise Exception('Modifying objects on {} request'.format(
                 cherrypy.request.method
             ))

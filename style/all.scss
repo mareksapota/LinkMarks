@@ -3,22 +3,6 @@
 @import "PressUI/style/form";
 @import "PressUI/style/box";
 
-.button {
-  @include press-button($blue, white);
-}
-
-input[type=search], input[type=text] {
-  @include press-input-text($gray1);
-}
-
-#search-form .query {
-    width: 100%;
-}
-
-#new-form, #edit-form {
-  @include press-form(10em, 40em);
-}
-
 .bookmark {
   @include press-box($gray3, $gray2);
 

@@ -2,25 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import cherrypy
-from cherrypy.process.plugins import PIDFile
-import os
-from os.path import abspath, dirname
-import sys
-import json
+import python_apis_maarons.FB.login as FBlogin
+import urllib.parse
 
-from utils.Query import query_arg, valid_query_arg
-from utils.redirect import perform_redirect
+from PressUI.cherrypy.PressApp import PressApp
+from PressUI.cherrypy.PressConfig import PressConfig
+from PressUI.cherrypy.server import quickstart
 from model.Bookmark import Bookmark
 import model.Parse
-import templates as t
-from PressUI.cherrypy.common import press_set_production
-from PressUI.cherrypy.javascript import press_all_js
-from PressUI.cherrypy.stylesheet import press_all_css
-import config
-
-import python_apis_maarons.FB.login as FBlogin
-
-model.Parse.init(config.parse_app_id, config.parse_rest_key)
 
 def safe_access(fn):
 
@@ -28,168 +17,162 @@ def safe_access(fn):
     def wrapped(*args, **kwargs):
         try:
             FBlogin.cherrypy_authenticate(
-                config.fb_app_id,
-                config.fb_app_secret,
+                PressConfig.get('fb_app_id'),
+                PressConfig.get('fb_app_secret'),
             )
-        except FBlogin.LoginException:
-            return t.render("login")
         except:
-            return t.render("accessdenied")
+            raise Exception('Access denied')
 
-        if cherrypy.request.fb_user_id not in config.fb_allowed_user_ids:
-            return t.render("accessdenied")
+        allowed_ids = PressConfig.get('fb_allowed_user_ids')
+        if cherrypy.request.fb_user_id not in allowed_ids:
+            raise Exception('Access denied')
 
         return fn(*args, **kwargs)
 
     return wrapped
 
-class LinkMarks():
-    @cherrypy.tools.allow(methods = ["GET"])
-    @safe_access
-    def index(self, query = ""):
-        return t.render("index", query = query)
+class LinkMarks(PressApp):
+    def _js_sources(self):
+        return [
+            'components/Bookmark.js',
+            'components/BookmarkList.js',
+            'components/BookmarkEdit.js',
+            'controller/index.js',
+            'controller/login.js',
+            'controller/show_all.js',
+            'controller/add_engine.js',
+            'controller/search.js',
+            'controller/new.js',
+            'controller/edit.js',
+            'controller/main.js',
+        ]
+
+    @cherrypy.tools.allow(methods = ['GET'])
+    @cherrypy.expose
+    def fb_login_info_json(self):
+        return self._json({
+            'app_id': PressConfig.get('fb_app_id'),
+            'hostname': cherrypy.request.base,
+        })
 
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
-    @valid_query_arg("/")
-    def search(self, query = None, redirect = None):
-        key_bookmark_p = Bookmark.gen_find_keyword(query.keyword())
+    def show_all_json(self):
+        bookmarks = Bookmark.all()
+        return self._json(list(map(lambda b: b.to_json(), bookmarks)))
+
+    def __search_common(self, query, key_transform):
+        query = urllib.parse.unquote_plus(query)
+        if len(query.strip()) == 0:
+            return {'keyword': False, 'bookmarks': []}
+        keyword = query.split()[0]
+
+        key_bookmark_p = Bookmark.gen_find_keyword(keyword)
         bookmarks_p = Bookmark.gen_find_all(query)
 
         key_bookmark = key_bookmark_p.prep()
         if key_bookmark is not None:
-            return perform_redirect(key_bookmark.search(query.body()))
+            term = query[len(keyword) + 1:]
+            key_ret = key_transform(key_bookmark, keyword, term)
+            if key_ret is not None:
+                return {'keyword': True, 'ret': key_ret}
 
         bookmarks = bookmarks_p.prep()
-        if redirect == "yes" and len(bookmarks) == 1:
-            return perform_redirect(bookmarks[0].str_url())
-        return t.render(
-            "search",
-            bookmarks = bookmarks,
-            query = query,
-        )
+        return {'keyword': False, 'bookmarks': bookmarks}
 
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
-    def all(self):
-        bookmarks = Bookmark.all()
-        return t.render(
-            "all",
-            bookmarks = bookmarks,
-        )
+    def search_json(self, query):
+        def key_transform(key_bookmark, keyword, term):
+            return key_bookmark.search(term)
+        ret = self.__search_common(query, key_transform)
+        if ret['keyword']:
+            ret['url'] = ret['ret']
+        else:
+            ret['bookmarks'] = list(map(
+                lambda b: b.to_json(),
+                ret['bookmarks'],
+            ))
+        return self._json(ret)
 
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
-    def new(self):
-        return t.render("new")
+    def suggestion(self, count, query):
+        def key_transform(key_bookmark, keyword, term):
+            nonlocal count
+            user_agent = cherrypy.request.headers["User-Agent"]
+            try:
+                count = int(count)
+                suggestions = key_bookmark.get_suggestions(
+                    term,
+                    user_agent,
+                    count,
+                )
+                return ['{} {}'.format(keyword, s) for s in suggestions]
+            except:
+                return None
+        ret = self.__search_common(query, key_transform)
+        if ret['keyword']:
+            results = ret['ret']
+        else:
+            results = [b.name for b in ret['bookmarks']]
+        return self._json([query, results])
+
+    @cherrypy.tools.allow(methods = ["GET"])
+    @safe_access
+    def get_json(self, objectId):
+        return self._json(Bookmark.get_safe(objectId).to_json())
 
     @cherrypy.tools.allow(methods = ["POST"])
     @safe_access
-    def save(self, name, url, keyword, tags, suggestions_url, objectId = None, back = None):
-        bookmark = Bookmark()
+    def save_json(
+        self,
+        name,
+        url,
+        keyword,
+        tags,
+        suggestions_url,
+        objectId = None,
+    ):
         if objectId is not None:
             bookmark = Bookmark.get_safe(objectId)
-        bookmark.name = name if name.strip() else None
-        bookmark.url = url if url.strip() else None
-        bookmark.keyword = keyword if keyword.strip() else None
-        bookmark.suggestions_url = suggestions_url if suggestions_url.strip() else None
-        bookmark.tags = tags.strip()
-        bookmark.save()
-        if back is None:
-            return perform_redirect("/")
         else:
-            return perform_redirect(back)
-
-    @cherrypy.tools.allow(methods = ["GET"])
-    @safe_access
-    def edit(self, objectId, back):
-        bookmark = Bookmark.get_safe(objectId)
-        return t.render("edit", bookmark = bookmark, back = back)
+            bookmark = Bookmark()
+        bookmark.name = name.strip() if name.strip() else None
+        bookmark.url = url.strip() if url.strip() else None
+        bookmark.keyword = keyword.strip() if keyword.strip() else None
+        bookmark.suggestions_url = suggestions_url.strip() if \
+                suggestions_url.strip() else None
+        bookmark.tags = tags.strip()
+        ret = {'success': True}
+        try:
+            bookmark.save()
+            ret['objectId'] = bookmark.objectId
+        except Exception as e:
+            ret = {'success': False}
+        return self._json(ret)
 
     @cherrypy.tools.allow(methods = ["POST"])
     @safe_access
-    def delete(self, objectId, back = None):
+    def delete_json(self, objectId):
         bookmark = Bookmark.get_safe(objectId)
         bookmark.destroy()
-        if back is None:
-            return perform_redirect("/")
-        else:
-            return perform_redirect(back)
+        return self._json({'success': True})
 
     # OpenSearch
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def opensearchdescription_xml(self):
         cherrypy.response.headers['Content-Type'] = \
-            "application/opensearchdescription+xml"
+            'application/opensearchdescription+xml'
         host = cherrypy.request.base
-        return t.render_template("opensearchdescription.xml", host = host)
+        with open('opensearchdescription.xml', 'r') as f:
+            return f.read().format(host=host).encode('utf-8')
 
-    @cherrypy.tools.allow(methods = ["GET"])
-    @safe_access
-    @query_arg
-    def suggestion(self, count, query = None):
-        try:
-            limit = int(count)
-            if query is None or not query.is_valid():
-                raise Exception("Invalid query")
-            user_agent = cherrypy.request.headers["User-Agent"]
-            key_bookmark_p = Bookmark.gen_find_keyword(query.keyword())
-            bookmarks_p = Bookmark.gen_find_all(query, limit = limit)
-            key_bookmark = key_bookmark_p.prep()
-            if key_bookmark is not None:
-                results = key_bookmark.get_suggestions(query, user_agent, limit)
-                if results is not None:
-                    return json.dumps(results)
-            return json.dumps([
-                str(query.url_unsafe()),
-                [b.name for b in bookmarks_p.prep()],
-            ])
-        except:
-            return json.dumps([str(query.url_unsafe()), []])
-
-    @cherrypy.tools.allow(methods = ["GET"])
-    @safe_access
-    def addengine(self):
-        return t.render("addengine")
-
-    @cherrypy.tools.allow(methods = ["GET"])
-    @safe_access
-    def version(self):
-        f = abspath(__file__)
-        d = dirname(f)
-        linkmarks_version = "unknown"
-        with open(d + "/.git/refs/heads/master") as f:
-            linkmarks_version = f.read()
-        pressui_version = "unknown"
-        with open(d + "/PressUI/.git/refs/heads/master") as f:
-            pressui_version = f.read()
-        return t.render(
-            "version",
-            linkmarks_version = linkmarks_version,
-            pressui_version = pressui_version,
+if __name__ == '__main__':
+    def parse_init():
+        model.Parse.init(
+            PressConfig.get('parse_app_id'),
+            PressConfig.get('parse_rest_key'),
         )
-
-    @cherrypy.tools.allow(methods = ["GET"])
-    @cherrypy.expose
-    def channel(self):
-        cherrypy.request.fb_user_id = None
-        return t.render("PressUI/facebook_channel")
-
-    all_js = press_all_js
-    all_css = press_all_css
-
-cherrypy.config.update({
-    "server.socket_port": 8080,
-    "tools.gzip.on": True,
-})
-
-if len(sys.argv) > 1 and sys.argv[1] == "production":
-    cherrypy.config.update({
-        "environment": "production",
-        "tools.proxy.on": True
-    })
-    PIDFile(cherrypy.engine, "/tmp/linkmarks.pid").subscribe()
-    press_set_production(True)
-
-cherrypy.quickstart(LinkMarks())
+    quickstart(LinkMarks, 'linkmarks', parse_init)
