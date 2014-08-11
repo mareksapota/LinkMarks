@@ -1,3 +1,3 @@
 [submodule "PressUI"]
 	path = PressUI
-	url = git@github.com:maarons/pressui.git
+	url = https://github.com/maarons/pressui.git
