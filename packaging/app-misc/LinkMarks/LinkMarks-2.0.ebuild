@@ -25,5 +25,10 @@ DEPEND="dev-python/cherrypy[${PYTHON_USEDEP}]
 RDEPEND="${DEPEND}"
 
 src_compile() {
-	make || die
+	make || die "Make failed"
+}
+
+src_install() {
+	dodir "/usr/share/LinkMarks"
+	rsync -a "${S}/" "${D}/usr/share/LinkMarks" || die "Install failed"
 }
