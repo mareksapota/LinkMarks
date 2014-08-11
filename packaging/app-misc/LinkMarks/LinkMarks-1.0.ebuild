@@ -2,11 +2,16 @@ EAPI=5
 
 PYTHON_COMPAT=( python{3_3,3_4} )
 
-inherit vcs-snapshot
+inherit distutils-r1
 
 DESCRIPTION="LinkMarks"
 HOMEPAGE="https://github.com/maarons/LinkMarks"
-SRC_URI="https://github.com/maarons/LinkMarks/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+EGIT_REPO_URI="https://github.com/maarons/LinkMarks.git"
+EGIT_HAS_SUBMODULES=1
+EGIT_COMMIT="${PV}"
+SRC_URI=""
+inherit git-2
 
 LICENSE="MIT"
 SLOT="0"
@@ -20,5 +25,5 @@ DEPEND="dev-python/cherrypy[${PYTHON_USEDEP}]
 RDEPEND="${DEPEND}"
 
 src_compile() {
-	make
+	make || die
 }
