@@ -16,6 +16,25 @@ var searchController = function(params) {
           window.location.replace(data.bookmarks[0].url);
           return;
         }
+        // Load page late so it doesn't show up for redirects.
+        var page = (
+          <div>
+            <PressNavigationButton
+              label='Back'
+              uri='/'
+              className='press-right'
+            />
+            <PressNavigationButton
+              label='Edit search'
+              uri='/'
+              params={editParams}
+              className='press-right'
+            />
+            <h1>Search results</h1>
+            <div id='content'></div>
+          </div>
+        );
+        React.renderComponent(page, $('#page').get(0));
         var bookmarksList = <BookmarkList bookmarks={data.bookmarks}/>;
         React.renderComponent(bookmarksList, $('#content').get(0));
       }
@@ -30,20 +49,8 @@ var searchController = function(params) {
 
   return (
     <div>
-      <PressNavigationButton
-        label='Back'
-        uri='/'
-        className='press-right'
-      />
-      <PressNavigationButton
-        label='Edit search'
-        uri='/'
-        params={editParams}
-        className='press-right'
-      />
-      <h1>Search results</h1>
       <PressLoadingAnimation id='loading-animation'/>
-      <div id='content'></div>
+      <div id='page'></div>
     </div>
   );
 }
