@@ -8,8 +8,11 @@ PressNavigation.setUriMap({
   '/edit': editController
 });
 
+$url = window.location.protocol + '//' + window.location.hostname + ':' +
+       window.location.port + '/fb_login_info.json';
+
 $.ajax({
-  url: 'http://localhost.maarons.org:8080/fb_login_info.json',
+  url: $url,
   success: function(data) {
     PressNavigation.setHostname(data['hostname']);
 
