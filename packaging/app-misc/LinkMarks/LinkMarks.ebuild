@@ -30,6 +30,6 @@ src_compile() {
 
 src_install() {
 	dodir "/usr/share/LinkMarks"
-	rsync -a --exclude '.git' 'packaging' "${S}/" "${D}/usr/share/LinkMarks" \
-		|| die "Install failed"
+	rsync -a --exclude '.git' --exclude 'packaging' \
+		"${S}/" "${D}/usr/share/LinkMarks" || die "Install failed"
 }
