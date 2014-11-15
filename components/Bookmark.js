@@ -27,15 +27,16 @@ var Bookmark = React.createClass({
       suggestions = (
         <span>
           &nbsp;
-          <span className="small">suggestions enabled</span>
+          suggestions enabled
         </span>
       );
     }
     var keyword = null;
     if (this.props.keyword !== null) {
       keyword = (
-        <span className="keyword">
-          &nbsp;(<span className="blue">{this.props.keyword}</span>)
+        <span className='keyword'>
+          &nbsp;
+          <span className='press-text-hint'>({this.props.keyword})</span>
           {suggestions}
         </span>
       );
@@ -48,21 +49,26 @@ var Bookmark = React.createClass({
     var editParams = {'objectId': this.props.objectId};
     return (
       <div className='bookmark'>
-        <PressNavigationButton
-          label='Edit'
-          uri='/edit'
-          params={editParams}
-          className='press-right'
-        />
-        <div className='name'>
-          {this.props.name}
-          {keyword}
+        <div className='header'>
+          <PressNavigationButton
+            label='Edit'
+            uri='/edit'
+            params={editParams}
+            className='press-right'
+          />
+          <div className='name'>
+            {this.props.name}
+            {keyword}
+          </div>
+          <div className='press-clear'></div>
         </div>
-        <div className='url'>
-          <a href={this.props.url}>{this.props.url}</a>
-        </div>
-        <div className='tags'>
-          {tags}
+        <div className='content'>
+          <div className='url'>
+            <a href={this.props.url}>{this.props.url}</a>
+          </div>
+          <div className='tags'>
+            {tags}
+          </div>
         </div>
       </div>
     );
