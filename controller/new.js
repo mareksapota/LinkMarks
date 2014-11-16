@@ -1,4 +1,14 @@
 var newController = function() {
+  var content =
+    <BookmarkEdit
+      name={''}
+      url={''}
+      keyword={''}
+      suggestionsUrl={''}
+      tags={''}
+      objectId={''}
+      submitLabel='Create'
+    />;
   return (
     <div>
       <PressNavigationButton
@@ -7,15 +17,7 @@ var newController = function() {
         className='press-right'
       />
       <h1>New bookmark</h1>
-      <BookmarkEdit
-        name={''}
-        url={''}
-        keyword={''}
-        suggestionsUrl={''}
-        tags={''}
-        objectId={''}
-        submitLabel='Create'
-      />
+      <PressCard content={content}/>
     </div>
   );
 }

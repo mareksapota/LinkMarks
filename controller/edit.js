@@ -46,14 +46,8 @@ var editController = function(params) {
 
   var deleteParams = {'objectId': params.objectId};
 
-  return (
+  var content = (
     <div>
-      <PressNavigationButton
-        label='Back'
-        uri='/'
-        className='press-right'
-      />
-      <h1>Edit bookmark</h1>
       <div id='content'></div>
       <PressNavigationButton
         label='Delete'
@@ -62,6 +56,17 @@ var editController = function(params) {
         className='press-left'
         onClick={deleteBookmark}
       />
+    </div>
+  );
+  return (
+    <div>
+      <PressNavigationButton
+        label='Back'
+        uri='/'
+        className='press-right'
+      />
+      <h1>Edit bookmark</h1>
+      <PressCard content={content}/>
     </div>
   );
 }
