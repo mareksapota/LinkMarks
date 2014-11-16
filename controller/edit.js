@@ -19,7 +19,7 @@ var editController = function(params) {
           submitLabel='Update'
         />
       );
-      React.renderComponent(editForm, $('#content').get(0));
+      React.render(editForm, $('#content').get(0));
     },
     error: function() {
       // TODO do something

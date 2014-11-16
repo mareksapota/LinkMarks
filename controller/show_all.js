@@ -3,7 +3,7 @@ var showAllController = function() {
     url: '/show_all.json',
     success: function(data) {
       var bookmarksList = <BookmarkList bookmarks={data}/>;
-      React.renderComponent(bookmarksList, $('#content').get(0));
+      React.render(bookmarksList, $('#content').get(0));
       $('#loading-animation').hide();
     },
     error: function() {

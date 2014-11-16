@@ -47,30 +47,37 @@ var Bookmark = React.createClass({
       tags = <span>Tags: {tagsStr}</span>;
     }
     var editParams = {'objectId': this.props.objectId};
-    return (
-      <div className='bookmark'>
-        <div className='header'>
-          <PressNavigationButton
-            label='Edit'
-            uri='/edit'
-            params={editParams}
-            className='press-right'
-          />
-          <div className='name'>
-            {this.props.name}
-            {keyword}
-          </div>
-          <div className='press-clear'></div>
+    var header = (
+      <div>
+        <PressNavigationButton
+          label='Edit'
+          uri='/edit'
+          params={editParams}
+          className='press-right'
+        />
+        <div className='name'>
+          {this.props.name}
+          {keyword}
         </div>
-        <div className='content'>
-          <div className='url'>
-            <a href={this.props.url}>{this.props.url}</a>
-          </div>
-          <div className='tags'>
-            {tags}
-          </div>
+        <div className='press-clear'></div>
+      </div>
+    );
+    var content = (
+      <div>
+        <div className='url'>
+          <a href={this.props.url}>{this.props.url}</a>
+        </div>
+        <div className='tags'>
+          {tags}
         </div>
       </div>
+    );
+    return (
+      <PressCard
+        className='bookmark'
+        header={header}
+        content={content}
+      />
     );
   }
 });

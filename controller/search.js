@@ -34,9 +34,9 @@ var searchController = function(params) {
             <div id='content'></div>
           </div>
         );
-        React.renderComponent(page, $('#page').get(0));
+        React.render(page, $('#page').get(0));
         var bookmarksList = <BookmarkList bookmarks={data.bookmarks}/>;
-        React.renderComponent(bookmarksList, $('#content').get(0));
+        React.render(bookmarksList, $('#content').get(0));
       }
     },
     error: function() {

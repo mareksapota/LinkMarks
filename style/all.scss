@@ -4,24 +4,8 @@
 @import "PressUI/style/card";
 
 .bookmark {
-  @include press-card;
-
-  .header {
-    padding: 0.5em;
-  }
-
-  .content {
-    padding: 0.5em;
-    background-color: $white;
-    color: $black;
-  }
-
   .name {
     font-size: 1.5em;
-  }
-
-  .url, .tags {
-    font-size: 0.9em;
   }
 
   .url a {
