@@ -11,16 +11,20 @@ var showAllController = function() {
     },
     dataType: 'json',
   });
-  return (
-    <div>
-      <PressNavigationButton
-        label='Back'
-        uri='/'
-        className='press-right'
-      />
-      <h1>All bookmarks</h1>
-      <PressLoadingAnimation id='loading-animation'/>
-      <div id='content'></div>
-    </div>
-  );
+  return {
+    'toolbar':
+      <div>
+        <PressNavigationButton
+          label='Back'
+          uri='/'
+          className='press-right'
+        />
+        <h1>All bookmarks</h1>
+      </div>,
+    'content':
+      <div>
+        <PressLoadingAnimation id='loading-animation'/>
+        <div id='content'></div>
+      </div>
+  };
 }

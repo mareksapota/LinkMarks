@@ -58,15 +58,16 @@ var editController = function(params) {
       />
     </div>
   );
-  return (
-    <div>
-      <PressNavigationButton
-        label='Back'
-        uri='/'
-        className='press-right'
-      />
-      <h1>Edit bookmark</h1>
-      <PressCard content={content}/>
-    </div>
-  );
+  return {
+    'toolbar':
+      <div>
+        <PressNavigationButton
+          label='Back'
+          uri='/'
+          className='press-right'
+        />
+        <h1>Edit bookmark</h1>
+      </div>,
+    'content': <PressCard content={content}/>
+  };
 }

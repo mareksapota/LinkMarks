@@ -17,26 +17,9 @@ var searchController = function(params) {
           return;
         }
         // Load page late so it doesn't show up for redirects.
-        var page = (
-          <div>
-            <PressNavigationButton
-              label='Back'
-              uri='/'
-              className='press-right'
-            />
-            <PressNavigationButton
-              label='Edit search'
-              uri='/'
-              params={editParams}
-              className='press-right'
-            />
-            <h1>Search results</h1>
-            <div id='content'></div>
-          </div>
+        PressNavigation.renderContent(
+          <BookmarkList bookmarks={data.bookmarks}/>
         );
-        React.render(page, $('#page').get(0));
-        var bookmarksList = <BookmarkList bookmarks={data.bookmarks}/>;
-        React.render(bookmarksList, $('#content').get(0));
       }
     },
     error: function() {
@@ -47,10 +30,22 @@ var searchController = function(params) {
 
   var editParams = {'query': params.query};
 
-  return (
-    <div>
-      <PressLoadingAnimation id='loading-animation'/>
-      <div id='page'></div>
-    </div>
-  );
+  return {
+    'toolbar':
+      <div>
+        <PressNavigationButton
+          label='Back'
+          uri='/'
+          className='press-right'
+        />
+        <PressNavigationButton
+          label='Edit search'
+          uri='/'
+          params={editParams}
+          className='press-right'
+        />
+        <h1>Search results</h1>
+      </div>,
+    'content': <PressLoadingAnimation id='loading-animation'/>
+  };
 }

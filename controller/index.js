@@ -48,29 +48,33 @@ var indexController = function(params) {
     }
   });
 
-  return (
-    <div>
-      <PressNavigationButton
-        label='Add search engine'
-        uri='/add_engine'
-        className='press-right'
-      />
-      <PressNavigationButton
-        label='New bookmark'
-        uri='/new'
-        className='press-right'
-      />
-      <h1>
-        Search your bookmarks
-      </h1>
-      <SearchForm>
-        <SearchFormInput/>
-      </SearchForm>
-      <PressNavigationButton
-        label='Show all bookmarks'
-        uri='/show_all'
-        className='press-left'
-      />
-    </div>
-  );
+  return {
+    'toolbar':
+      <div>
+        <PressNavigationButton
+          label='Add search engine'
+          uri='/add_engine'
+          className='press-right'
+        />
+        <PressNavigationButton
+          label='New bookmark'
+          uri='/new'
+          className='press-right'
+        />
+        <h1>
+          Search your bookmarks
+        </h1>
+      </div>,
+    'content':
+      <div>
+        <SearchForm>
+          <SearchFormInput/>
+        </SearchForm>
+        <PressNavigationButton
+          label='Show all bookmarks'
+          uri='/show_all'
+          className='press-left'
+        />
+      </div>
+  };
 }
