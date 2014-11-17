@@ -17,6 +17,22 @@ var searchController = function(params) {
           return;
         }
         // Load page late so it doesn't show up for redirects.
+        PressNavigation.renderToolbar(
+          <div>
+            <PressNavigationButton
+              label='Back'
+              uri='/'
+              className='press-right'
+            />
+            <PressNavigationButton
+              label='Edit search'
+              uri='/'
+              params={editParams}
+              className='press-right'
+            />
+            <h1>Search results</h1>
+          </div>
+        );
         PressNavigation.renderContent(
           <BookmarkList bookmarks={data.bookmarks}/>
         );
@@ -30,22 +46,5 @@ var searchController = function(params) {
 
   var editParams = {'query': params.query};
 
-  return {
-    'toolbar':
-      <div>
-        <PressNavigationButton
-          label='Back'
-          uri='/'
-          className='press-right'
-        />
-        <PressNavigationButton
-          label='Edit search'
-          uri='/'
-          params={editParams}
-          className='press-right'
-        />
-        <h1>Search results</h1>
-      </div>,
-    'content': <PressLoadingAnimation id='loading-animation'/>
-  };
+  return <PressLoadingAnimation id='loading-animation'/>;
 }
