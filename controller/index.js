@@ -9,7 +9,7 @@ var indexController = function(params) {
     handleSubmit: function(event) {
       var query = $('#search-form-input').val();
       PressNavigation.switchToUri('/search', {'query': query});
-      return false;
+      event.preventDefault();
     },
 
     render: function() {

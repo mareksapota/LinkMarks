@@ -45,7 +45,7 @@ var BookmarkEdit = React.createClass({
         onError();
       }
     });
-    return false;
+    event.preventDefault();
   },
 
   render: function() {
