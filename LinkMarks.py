@@ -72,7 +72,7 @@ class LinkMarks(PressApp):
 
         key_bookmark = key_bookmark_p.prep()
         if key_bookmark is not None:
-            term = query[len(keyword) + 1:]
+            term = urllib.parse.quote_plus(query[len(keyword) + 1:])
             key_ret = key_transform(key_bookmark, keyword, term)
             if key_ret is not None:
                 return {'keyword': True, 'ret': key_ret}
