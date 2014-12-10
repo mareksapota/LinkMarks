@@ -20,7 +20,6 @@ IUSE=""
 
 DEPEND="dev-python/cherrypy[${PYTHON_USEDEP}]
 	dev-ruby/sass
-	app-misc/python_apis_maarons
 	sys-devel/make"
 RDEPEND="${DEPEND}"
 

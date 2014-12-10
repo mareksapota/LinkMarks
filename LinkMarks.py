@@ -2,13 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import cherrypy
-import python_apis_maarons.FB.login as FBlogin
 import urllib.parse
 
 from PressUI.cherrypy.PressApp import PressApp
 from PressUI.cherrypy.PressConfig import PressConfig
 from PressUI.cherrypy.server import quickstart
 from model.Bookmark import Bookmark
+import PressUI.API.FB.login as FBlogin
 import model.Parse
 
 def safe_access(fn):
