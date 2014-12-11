@@ -20,6 +20,8 @@ IUSE=""
 
 DEPEND="dev-python/cherrypy[${PYTHON_USEDEP}]
 	dev-ruby/sass
+	net-libs/nodejs
+	net-misc/curl
 	sys-devel/make"
 RDEPEND="${DEPEND}"
 

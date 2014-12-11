@@ -16,3 +16,5 @@ one matching result you will be automatically redirected to that page.
 - Python 3.x — LinkMarks will not work with Python 2.
 - CherryPy
 - SASS
+- cURL
+- Node.js
