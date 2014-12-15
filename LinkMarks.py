@@ -7,6 +7,7 @@ import urllib.parse
 from PressUI.cherrypy.PressApp import PressApp
 from PressUI.cherrypy.PressConfig import PressConfig
 from PressUI.cherrypy.server import quickstart
+from PressUI.utils.browser_cache import add_cache_control_header
 from model.Bookmark import Bookmark
 import PressUI.API.FB.login as FBlogin
 import model.Parse
@@ -50,16 +51,20 @@ class LinkMarks(PressApp):
     @cherrypy.tools.allow(methods = ['GET'])
     @cherrypy.expose
     def fb_login_info_json(self):
-        return self._json({
+        ret = self._json({
             'app_id': PressConfig.get('fb_app_id'),
             'hostname': cherrypy.request.base,
-        })
+        }, no_cache = False)
+        add_cache_control_header(years = 1)
+        return ret
 
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def show_all_json(self):
         bookmarks = Bookmark.all()
-        return self._json(list(map(lambda b: b.to_json(), bookmarks)))
+        ret = self._json(list(map(lambda b: b.to_json(), bookmarks)))
+        add_cache_control_header(days = 1)
+        return ret
 
     def __search_common(self, query, key_transform):
         query = urllib.parse.unquote_plus(query)
@@ -93,7 +98,9 @@ class LinkMarks(PressApp):
                 lambda b: b.to_json(),
                 ret['bookmarks'],
             ))
-        return self._json(ret)
+        ret = self._json(ret)
+        add_cache_control_header(days = 1)
+        return ret
 
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
@@ -163,6 +170,7 @@ class LinkMarks(PressApp):
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def opensearchdescription_xml(self):
+        add_cache_control_header(days = 1)
         cherrypy.response.headers['Content-Type'] = \
             'application/opensearchdescription+xml'
         host = cherrypy.request.base
