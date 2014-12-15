@@ -54,7 +54,7 @@ class LinkMarks(PressApp):
         ret = self._json({
             'app_id': PressConfig.get('fb_app_id'),
             'hostname': cherrypy.request.base,
-        }, no_cache = False)
+        })
         add_cache_control_header(years = 1)
         return ret
 
