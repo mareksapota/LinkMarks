@@ -10,7 +10,7 @@ from PressUI.cherrypy.server import quickstart
 from PressUI.utils.browser_cache import add_cache_control_header
 from model.Bookmark import Bookmark
 import PressUI.API.FB.login as FBlogin
-import model.Parse
+import PressUI.cherrypy.Parse
 
 def safe_access(fn):
 
@@ -179,7 +179,7 @@ class LinkMarks(PressApp):
 
 if __name__ == '__main__':
     def parse_init():
-        model.Parse.init(
+        PressUI.cherrypy.Parse.init(
             PressConfig.get('parse_app_id'),
             PressConfig.get('parse_rest_key'),
         )

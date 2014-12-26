@@ -2,7 +2,7 @@ import cherrypy
 import urllib.request
 import json
 
-from model.Parse import ParseObjFB, ParseQuery
+from PressUI.cherrypy.Parse import ParseObjFB, ParseQuery
 
 class Bookmark(ParseObjFB):
     def __init__(self, **kwargs):
