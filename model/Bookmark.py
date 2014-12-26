@@ -2,17 +2,13 @@ import cherrypy
 import urllib.request
 import json
 
-from model.Parse import ParseObj, ParseQuery
+from model.Parse import ParseObjFB, ParseQuery
 
-class Bookmark(ParseObj):
+class Bookmark(ParseObjFB):
     def __init__(self, **kwargs):
-        if 'fb_user_id' not in kwargs:
-            kwargs['fb_user_id'] = cherrypy.request.fb_user_id
-
-        ParseObj.__init__(
+        ParseObjFB.__init__(
             self,
             {
-                'fb_user_id': {'type': int},
                 'name': {'type': str},
                 'url': {'type': str},
                 'keyword': {'type': str, 'nullable': True},
@@ -41,20 +37,6 @@ class Bookmark(ParseObj):
         if self.keyword is None:
             raise Exception('This bookmark does not have a keyword')
         return self.url.replace('%s', query)
-
-    @staticmethod
-    def get_safe(objectId):
-        bookmark = Bookmark.get(objectId)
-        if bookmark.fb_user_id != cherrypy.request.fb_user_id:
-            raise Exception('Unauthorised access')
-        return bookmark
-
-    @staticmethod
-    def query_safe():
-        return Bookmark.query().equal_to(
-            'fb_user_id',
-            cherrypy.request.fb_user_id,
-        )
 
     @staticmethod
     def __sort_results(bookmarks):

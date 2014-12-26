@@ -1,7 +1,8 @@
-import urllib.request
-import urllib.parse
+import cherrypy
 import json
 import threading
+import urllib.parse
+import urllib.request
 
 app_id = None
 rest_key = None
@@ -250,3 +251,33 @@ class ParseObj(ParseBase):
             data[prop] = val
         data['objectId'] = getattr(self, 'objectId', None)
         return data
+
+# ParseObj owned by a Facebook user.
+class ParseObjFB(ParseObj):
+    def __init__(self, properties, values):
+        if 'fb_user_id' not in values:
+            values['fb_user_id'] = cherrypy.request.fb_user_id
+        properties['fb_user_id'] = {'type': int}
+        ParseObj.__init__(self, properties, values)
+
+    # `is_safe` is used internally, it's not a good idea to use it from a
+    # subclass.
+    @classmethod
+    def query(cls, is_safe = False):
+        if not is_safe:
+            raise Exception('This query is not safe')
+        return ParseObj.query.__func__(cls)
+
+    @classmethod
+    def query_safe(cls):
+        return ParseObjFB.query.__func__(cls, is_safe = True).equal_to(
+            'fb_user_id',
+            cherrypy.request.fb_user_id,
+        )
+
+    @classmethod
+    def get_safe(cls, objectId):
+        obj = ParseObj.get.__func__(cls, objectId)
+        if obj.fb_user_id != cherrypy.request.fb_user_id:
+            raise Exception('Unauthorised access')
+        return obj
