@@ -21,7 +21,7 @@ $.ajax({
       'cookie': true,
       'xfbml': true,
       'status': true,
-      'version': 'v2.0',
+      'version': 'v2.2',
     });
 
     FB.getLoginStatus(function(response) {
