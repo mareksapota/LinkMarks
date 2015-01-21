@@ -29,16 +29,6 @@ class LinkMarks(PressApp):
             'controller/main.js',
         ]
 
-    @cherrypy.tools.allow(methods = ['GET'])
-    @cherrypy.expose
-    def fb_login_info_json(self):
-        ret = self._json({
-            'app_id': PressConfig.get('fb_app_id'),
-            'hostname': cherrypy.request.base,
-        })
-        add_cache_control_header(years = 1)
-        return ret
-
     @cherrypy.tools.allow(methods = ["GET"])
     @safe_access
     def show_all_json(self):
