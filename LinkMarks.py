@@ -4,6 +4,7 @@
 import cherrypy
 import urllib.parse
 
+from PressUI.API.FB.login import safe_access
 from PressUI.cherrypy.PressApp import PressApp
 from PressUI.cherrypy.PressConfig import PressConfig
 from PressUI.cherrypy.server import quickstart
@@ -11,26 +12,6 @@ from PressUI.utils.browser_cache import add_cache_control_header
 from model.Bookmark import Bookmark
 import PressUI.API.FB.login as FBlogin
 import PressUI.cherrypy.Parse
-
-def safe_access(fn):
-
-    @cherrypy.expose
-    def wrapped(*args, **kwargs):
-        try:
-            FBlogin.cherrypy_authenticate(
-                PressConfig.get('fb_app_id'),
-                PressConfig.get('fb_app_secret'),
-            )
-        except:
-            raise Exception('Access denied')
-
-        allowed_ids = PressConfig.get('fb_allowed_user_ids')
-        if cherrypy.request.fb_user_id not in allowed_ids:
-            raise Exception('Access denied')
-
-        return fn(*args, **kwargs)
-
-    return wrapped
 
 class LinkMarks(PressApp):
     def _js_sources(self):
