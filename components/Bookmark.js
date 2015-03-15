@@ -1,6 +1,6 @@
 function bookmarkTagsString(tags) {
   if ($.trim(tags) !== '') {
-    tags_list = tags.split(',');
+    var tags_list = tags.split(',');
     return $.map(
       tags_list,
       function(tag, _) {
