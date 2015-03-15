@@ -8,8 +8,8 @@ PressNavigation.setUriMap({
   '/edit': editController
 });
 
-$url = window.location.protocol + '//' + window.location.hostname + ':' +
-       window.location.port + '/fb_login_info.json';
+var $url = window.location.protocol + '//' + window.location.hostname + ':' +
+           window.location.port + '/fb_login_info.json';
 
 $.ajax({
   url: $url,
