@@ -4,12 +4,13 @@ var BookmarkList = React.createClass({
   },
 
   render: function() {
-    var bookmarks = {};
+    var bookmarks = [];
     $.each(
       this.props.bookmarks,
       function(i, bookmark) {
-        bookmarks['id-' + i] = (
+        bookmarks.push(
           <Bookmark
+            key={bookmark.objectId}
             name={bookmark.name}
             url={bookmark.url}
             keyword={bookmark.keyword}
