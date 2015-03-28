@@ -17,16 +17,16 @@ class LinkMarks(PressApp):
     def _js_sources(self):
         return [
             'components/Bookmark.js',
-            'components/BookmarkList.js',
             'components/BookmarkEdit.js',
+            'components/BookmarkList.js',
+            'controller/add_engine.js',
+            'controller/edit.js',
             'controller/index.js',
             'controller/login.js',
-            'controller/show_all.js',
-            'controller/add_engine.js',
-            'controller/search.js',
             'controller/new.js',
-            'controller/edit.js',
-            'controller/main.js',
+            'controller/search.js',
+            'controller/show_all.js',
+            'controller/uri_map.js',
         ]
 
     @cherrypy.tools.allow(methods = ["GET"])
