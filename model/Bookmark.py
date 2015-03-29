@@ -1,8 +1,8 @@
-import cherrypy
 import urllib.request
 import json
 
-from PressUI.cherrypy.Parse import ParseObjFB, ParseQuery
+from PressUI.cherrypy.Parse import ParseObjFB
+from PressUI.cherrypy.Parse import ParseQuery
 
 class Bookmark(ParseObjFB):
     def __init__(self, **kwargs):
@@ -78,15 +78,3 @@ class Bookmark(ParseObjFB):
         return Bookmark.__sort_results(
             Bookmark.query_safe().ascending('name').find()
         )
-
-    def before_save(self):
-        self.force_post()
-
-    def before_destroy(self):
-        self.force_post()
-
-    def force_post(self):
-        if cherrypy.request.method != 'POST':
-            raise Exception('Modifying objects on {} request'.format(
-                cherrypy.request.method
-            ))
