@@ -41,6 +41,7 @@ var indexController = function(params) {
           id='search-form-input'
           type='search'
           className='press-wide'
+          autoCapitalize='none'
           value={this.state.value}
           onChange={this.handleChange}
         />
