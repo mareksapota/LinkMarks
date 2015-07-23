@@ -14,14 +14,12 @@ var indexController = function(params) {
 
     render: function() {
       return (
-        <form action='#' onSubmit={this.handleSubmit}>
+        <PressForm
+          onSubmit={this.handleSubmit}
+          submitLabel='Search'
+        >
           {this.props.children}
-          <input
-            type='submit'
-            className="press-right press-button"
-            value='Search'
-          />
-        </form>
+        </PressForm>
       );
     }
   });

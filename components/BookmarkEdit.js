@@ -34,7 +34,6 @@ var BookmarkEdit = React.createClass({
       type: 'POST',
       data: data,
       success: function(ret) {
-        console.log(ret);
         if (ret.success) {
           PressNavigation.switchToUri('/edit', {'objectId': ret.objectId});
         } else {
@@ -49,46 +48,44 @@ var BookmarkEdit = React.createClass({
   },
 
   render: function() {
-    var content = [
-      <input
-        id='search-form-objectId'
-        type='hidden'
-        name='objectId'
-        value={this.props.objectId}
-      />,
-      <PressFormInput
-        label='Name'
-        name='name'
-        value={this.props.name}
-      />,
-      <PressFormInput
-        label='URL'
-        name='url'
-        value={this.props.url}
-      />,
-      <PressFormInput
-        label='Keyword'
-        name='keyword'
-        value={this.props.keyword}
-      />,
-      <PressFormInput
-        label='Tags'
-        name='tags'
-        value={bookmarkTagsString(this.props.tags)}
-      />,
-      <PressFormInput
-        label='Suggestions URL'
-        name='suggestions_url'
-        value={this.props.suggestions_url}
-      />,
-    ];
-
     return (
       <PressForm
         onSubmit={this.handleSubmit}
         submitLabel={this.props.submitLabel}
         items={content}
-      />
+      >
+        <input
+          id='search-form-objectId'
+          type='hidden'
+          name='objectId'
+          value={this.props.objectId}
+        />
+        <PressFormInput
+          label='Name'
+          name='name'
+          value={this.props.name}
+        />
+        <PressFormInput
+          label='URL'
+          name='url'
+          value={this.props.url}
+        />
+        <PressFormInput
+          label='Keyword'
+          name='keyword'
+          value={this.props.keyword}
+        />
+        <PressFormInput
+          label='Tags'
+          name='tags'
+          value={bookmarkTagsString(this.props.tags)}
+        />
+        <PressFormInput
+          label='Suggestions URL'
+          name='suggestions_url'
+          value={this.props.suggestions_url}
+        />
+      </PressForm>
     );
   }
 });
