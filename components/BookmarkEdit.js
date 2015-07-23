@@ -10,24 +10,24 @@ var BookmarkEdit = React.createClass({
   },
 
   handleSubmit: function(event) {
-    var tags = bookmarkTagsString($('#search-form-tags').val());
+    var tags = bookmarkTagsString($('#press-form-tags').val());
     if (tags === null) {
       tags = '';
     }
-    var objectId = $('#search-form-objectId').val();
+    var objectId = $('#press-form-objectId').val();
     if (objectId === '') {
       objectId = null;
     }
     var data = {
-      objectId: $('#search-form-objectId').val(),
-      name: $('#search-form-name').val(),
-      url: $('#search-form-url').val(),
-      keyword: $('#search-form-keyword').val(),
-      suggestions_url: $('#search-form-suggestions_url').val(),
+      objectId: $('#press-form-objectId').val(),
+      name: $('#press-form-name').val(),
+      url: $('#press-form-url').val(),
+      keyword: $('#press-form-keyword').val(),
+      suggestions_url: $('#press-form-suggestions_url').val(),
       tags: tags
     }
     function onError() {
-      $('#search-form-error').text('Save failed');
+      $('#press-form-error').text('Save failed');
     }
     $.ajax({
       url: '/save.json',
@@ -49,85 +49,46 @@ var BookmarkEdit = React.createClass({
   },
 
   render: function() {
-    var SearchFormInput = React.createClass({
-      propTypes: {
-        name: React.PropTypes.string.isRequired,
-        label: React.PropTypes.string.isRequired,
-        value: React.PropTypes.string,
-      },
-
-      getInitialState: function() {
-        var value = this.props.value;
-        if (this.props.value === undefined || this.props.value === null) {
-          value = '';
-        }
-        return {value: value};
-      },
-
-      handleChange: function(event) {
-        this.setState({value: event.target.value});
-      },
-
-      render: function() {
-        return (
-          <div>
-            <label htmlFor={this.props.name}>{this.props.label}</label>
-            <input
-              id={'search-form-' + this.props.name}
-              type='text'
-              name={this.props.name}
-              value={this.state.value}
-              onChange={this.handleChange}
-            />
-          </div>
-        );
-      }
-    });
+    var content = [
+      <input
+        id='search-form-objectId'
+        type='hidden'
+        name='objectId'
+        value={this.props.objectId}
+      />,
+      <PressFormInput
+        label='Name'
+        name='name'
+        value={this.props.name}
+      />,
+      <PressFormInput
+        label='URL'
+        name='url'
+        value={this.props.url}
+      />,
+      <PressFormInput
+        label='Keyword'
+        name='keyword'
+        value={this.props.keyword}
+      />,
+      <PressFormInput
+        label='Tags'
+        name='tags'
+        value={bookmarkTagsString(this.props.tags)}
+      />,
+      <PressFormInput
+        label='Suggestions URL'
+        name='suggestions_url'
+        value={this.props.suggestions_url}
+      />,
+    ];
 
     return (
-      <form
-        className='press-form'
-        action='#'
+      <PressForm
         onSubmit={this.handleSubmit}
-      >
-        <div id='search-form-error'></div>
-        <input
-          id='search-form-objectId'
-          type='hidden'
-          name='objectId'
-          value={this.props.objectId}
-        />
-        <SearchFormInput
-          label='Name'
-          name='name'
-          value={this.props.name}
-        />
-        <SearchFormInput
-          label='URL'
-          name='url'
-          value={this.props.url}
-        />
-        <SearchFormInput
-          label='Keyword'
-          name='keyword'
-          value={this.props.keyword}
-        />
-        <SearchFormInput
-          label='Tags'
-          name='tags'
-          value={bookmarkTagsString(this.props.tags)}
-        />
-        <SearchFormInput
-          label='Suggestions URL'
-          name='suggestions_url'
-          value={this.props.suggestions_url}
-        />
-        <input
-          type='submit'
-          className='press-right press-button'
-          value={this.props.submitLabel}
-        />
-      </form>
+        submitLabel={this.props.submitLabel}
+        items={content}
+      />
     );
   }
 });
