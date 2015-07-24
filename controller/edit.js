@@ -9,17 +9,27 @@ var editController = function(params) {
     data: {'objectId': params.objectId},
     success: function(bookmark) {
       var editForm = (
-        <BookmarkEdit
-          name={bookmark.name}
-          url={bookmark.url}
-          keyword={bookmark.keyword}
-          suggestionsUrl={bookmark.suggestions_url}
-          tags={bookmark.tags}
-          objectId={bookmark.objectId}
-          submitLabel='Update'
-        />
+        <div>
+          <BookmarkEdit
+            name={bookmark.name}
+            url={bookmark.url}
+            keyword={bookmark.keyword}
+            suggestionsUrl={bookmark.suggestions_url}
+            tags={bookmark.tags}
+            objectId={bookmark.objectId}
+            submitLabel='Update'
+          />
+          <PressNavigationButton
+            label='Delete'
+            uri='/delete'
+            params={deleteParams}
+            className='press-left'
+            onClick={deleteBookmark}
+          />
+        </div>
       );
       React.render(editForm, $('#content').get(0));
+      $('#loading-animation').hide();
     },
     error: function() {
       // TODO do something
@@ -49,13 +59,7 @@ var editController = function(params) {
   var content = (
     <div>
       <div id='content'></div>
-      <PressNavigationButton
-        label='Delete'
-        uri='/delete'
-        params={deleteParams}
-        className='press-left'
-        onClick={deleteBookmark}
-      />
+      <PressLoadingAnimation id='loading-animation'/>
     </div>
   );
   return {
