@@ -5,48 +5,6 @@ var indexController = function(params) {
   $.extend(defaultParams, params);
   params = defaultParams;
 
-  var SearchForm = React.createClass({
-    handleSubmit: function(event) {
-      var query = $('#search-form-input').val();
-      PressNavigation.switchToUri('/search', {'query': query});
-      event.preventDefault();
-    },
-
-    render: function() {
-      return (
-        <PressForm
-          onSubmit={this.handleSubmit}
-          submitLabel='Search'
-        >
-          {this.props.children}
-        </PressForm>
-      );
-    }
-  });
-
-  var SearchFormInput = React.createClass({
-    getInitialState: function() {
-      return {value: params.query};
-    },
-
-    handleChange: function(event) {
-      this.setState({value: event.target.value});
-    },
-
-    render: function() {
-      return (
-        <input
-          id='search-form-input'
-          type='search'
-          className='press-wide'
-          autoCapitalize='none'
-          value={this.state.value}
-          onChange={this.handleChange}
-        />
-      );
-    }
-  });
-
   return {
     'toolbar':
       <div>
@@ -66,9 +24,7 @@ var indexController = function(params) {
       </div>,
     'content':
       <div>
-        <SearchForm>
-          <SearchFormInput/>
-        </SearchForm>
+        <SearchForm query={params.query}/>
         <PressNavigationButton
           label='Show all bookmarks'
           uri='/show_all'

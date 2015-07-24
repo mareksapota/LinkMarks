@@ -19,6 +19,7 @@ class LinkMarks(PressApp):
             'components/Bookmark.js',
             'components/BookmarkEdit.js',
             'components/BookmarkList.js',
+            'components/SearchForm.js',
             'controller/add_engine.js',
             'controller/edit.js',
             'controller/index.js',

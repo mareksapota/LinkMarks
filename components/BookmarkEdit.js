@@ -9,53 +9,41 @@ var BookmarkEdit = React.createClass({
     submitLabel: React.PropTypes.string.isRequired
   },
 
-  handleSubmit: function(event) {
-    var tags = bookmarkTagsString($('#press-form-tags').val());
+  processData: function(data) {
+    var tags = bookmarkTagsString(data['tags']);
     if (tags === null) {
       tags = '';
     }
-    var objectId = $('#press-form-objectId').val();
-    if (objectId === '') {
-      objectId = null;
+    data['tags'] = tags;
+    if (data['objectId'] === '') {
+      data['objectId'] = null;
     }
-    var data = {
-      objectId: $('#press-form-objectId').val(),
-      name: $('#press-form-name').val(),
-      url: $('#press-form-url').val(),
-      keyword: $('#press-form-keyword').val(),
-      suggestions_url: $('#press-form-suggestions_url').val(),
-      tags: tags
+    return data;
+  },
+
+  handleSuccess: function(ret) {
+    if (ret.success) {
+      PressNavigation.switchToUri('/edit', {'objectId': ret.objectId});
+      return true;
+    } else {
+      return false;
     }
-    function onError() {
-      $('#press-form-error').text('Save failed');
-    }
-    $.ajax({
-      url: '/save.json',
-      type: 'POST',
-      data: data,
-      success: function(ret) {
-        if (ret.success) {
-          PressNavigation.switchToUri('/edit', {'objectId': ret.objectId});
-        } else {
-          onError();
-        }
-      },
-      error: function() {
-        onError();
-      }
-    });
-    event.preventDefault();
+  },
+
+  handleError: function(ret) {
+    return 'Save failed';
   },
 
   render: function() {
     return (
       <PressForm
-        onSubmit={this.handleSubmit}
+        processData={this.processData}
         submitLabel={this.props.submitLabel}
-        items={content}
+        action='/save.json'
+        onSuccess={this.handleSuccess}
+        onError={this.handleError}
       >
-        <input
-          id='search-form-objectId'
+        <PressFormInput
           type='hidden'
           name='objectId'
           value={this.props.objectId}
